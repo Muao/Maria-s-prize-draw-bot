@@ -10,7 +10,8 @@ public enum BotMessageEnum {
 
     AFTER_PAYMENT_MESSAGE("Дякуємо. Після перевірки вам прийде повідомлення про нарахування квітків"),
     NON_COMMAND_MESSAGE("Невідома команда або невірний формат ввода суми: повиинні бути лише цифри"),
-    EXCEPTION_WHAT_THE_FUCK("Something went wrong");
+    EXCEPTION_WHAT_THE_FUCK("Something went wrong"),
+    SAME_PAYMENT_EXIST("Ви вже робили внесок на таку саме сумму");
 
     private final String message;
 

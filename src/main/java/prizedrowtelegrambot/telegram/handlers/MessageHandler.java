@@ -7,29 +7,24 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.User;
 import prizedrowtelegrambot.bot.BotMessageEnum;
 import prizedrowtelegrambot.bot.ButtonNameEnum;
+import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
-import prizedrowtelegrambot.repositories.DonateRepository;
+import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.telegram.keyboards.ReplyKeyboardMaker;
-
-import java.util.Date;
 
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class MessageHandler {
     ReplyKeyboardMaker replyKeyboardMaker;
-    DonateRepository donateRepository;
+    DonateService donateService;
 
     public BotApiMethod<?> answerMessage(Message message) {
-        final String chatId = message.getChatId().toString();
-        final String inputText = message.getText();
-        final User user = message.getFrom();
-        final String userName = user.getUserName();
-        final String name = user.getFirstName() + " " + user.getLastName();
-
+        final DonateDto donateDto = new DonateDto(message);
+        final String chatId = donateDto.getChatId();
+        final String inputText = donateDto.getInputText();
 
         if (inputText == null) {
             throw new IllegalArgumentException();
@@ -39,16 +34,13 @@ public class MessageHandler {
             return getPayment1Message(chatId);
         } else if (inputText.equals(ButtonNameEnum.GET_PAYMENT2_BUTTON.getButtonName())) {
             return getPayment2Message(chatId);
-        } else if (isInputTextNumber(inputText)) {
-            //todo check if user do not have enother one donate with same value
-            final Donate donate = new Donate();
-            donate.setAmount(Integer.parseInt(inputText));
-            donate.setUserName(name);
-            donate.setLogin(userName);
-            donate.setDate(new Date());
-            donate.setChartId(chatId);
-            final Donate save = donateRepository.save(donate);
-            return afterPayment1Message(chatId, save);
+        } else if (isInputTextNumber(inputText)){
+            if (!donateService.isDonateFromUserWithSameAmountExist(donateDto)) {
+                final Donate donate = donateService.saveEntity(donateDto);
+                return afterPayment1Message(chatId, donate);
+            } else {
+                return new SendMessage(chatId, BotMessageEnum.SAME_PAYMENT_EXIST.getMessage());
+            }
         } else {
             return new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
         }
