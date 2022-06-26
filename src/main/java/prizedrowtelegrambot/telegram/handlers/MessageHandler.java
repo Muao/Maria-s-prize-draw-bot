@@ -26,7 +26,6 @@ public class MessageHandler {
     public BotApiMethod<?> answerMessage(Message message) {
         final String chatId = message.getChatId().toString();
         final String inputText = message.getText();
-        final Date date = new Date(message.getDate());
         final User user = message.getFrom();
         final String userName = user.getUserName();
         final String name = user.getFirstName() + " " + user.getLastName();
@@ -46,7 +45,8 @@ public class MessageHandler {
             donate.setAmount(Integer.parseInt(inputText));
             donate.setUserName(name);
             donate.setLogin(userName);
-            donate.setDate(date);
+            donate.setDate(new Date());
+            donate.setChartId(chatId);
             final Donate save = donateRepository.save(donate);
             return afterPayment1Message(chatId, save);
         } else {

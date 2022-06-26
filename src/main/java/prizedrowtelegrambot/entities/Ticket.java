@@ -1,26 +1,24 @@
 package prizedrowtelegrambot.entities;
 
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "Donate")
 @Data
 @ToString
-public class Donate {
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int amount;
+
+    private Long ticketId;
+
     private String login;
-    private String userName;
-    @Temporal(TemporalType.DATE)
+
     private Date date;
-    private boolean checked;
-    private String chartId;
-    @OneToMany
-    private Set<Ticket> tickets;
+
 }
