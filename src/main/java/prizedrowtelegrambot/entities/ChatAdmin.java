@@ -4,21 +4,16 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Table(name = "Ticket")
+@Table(name = "chat_admin")
 @Data
 @ToString
-public class Ticket {
+public class ChatAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long ticketId;
-
     private String login;
-
-    private Date date;
-
+    private String userName;
+    private String chartId;
 }
