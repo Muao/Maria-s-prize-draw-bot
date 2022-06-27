@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import prizedrowtelegrambot.bot.ButtonNameEnum;
+import prizedrowtelegrambot.enums.ButtonNameEnum;
 
 
 import java.util.ArrayList;

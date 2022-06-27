@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import prizedrowtelegrambot.bot.BotMessageEnum;
+import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.services.AdminMessageService;
@@ -67,17 +67,17 @@ public record MessageHandler(
     }
 
     private SendMessage getStartMessage(String chatId) {
-        final SendMessage sendMessage = new SendMessage(chatId, BotMessageEnum.HELP_MESSAGE.getMessage());
+        final SendMessage sendMessage = new SendMessage(chatId, BotMessageEnum.INTRO_MESSAGE.getMessage());
         sendMessage.enableMarkdown(true);
         sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
         return sendMessage;
     }
 
     private SendMessage getPayment1Message(String chatId) {
-        return new SendMessage(chatId, BotMessageEnum.PAYMENT1_MESSAGE.getMessage());
+        return new SendMessage(chatId, BotMessageEnum.TICKETS_AMOUNT_MESSAGE.getMessage());
     }
 
     private SendMessage getPayment2Message(String chatId) {
-        return new SendMessage(chatId, BotMessageEnum.PAYMENT1_MESSAGE.getMessage());
+        return new SendMessage(chatId, BotMessageEnum.TICKETS_AMOUNT_MESSAGE.getMessage());
     }
 }

@@ -1,4 +1,4 @@
-package prizedrowtelegrambot.bot;
+package prizedrowtelegrambot.enums;
 
 public enum ButtonNameEnum {
     GET_PAYMENT1_BUTTON("Payment type 1"),
