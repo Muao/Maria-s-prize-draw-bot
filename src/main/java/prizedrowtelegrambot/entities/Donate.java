@@ -19,8 +19,11 @@ public class Donate {
     private String userName;
     @Temporal(TemporalType.DATE)
     private Date date;
+    private String charId;
     private boolean checked;
-    private String chartId;
+    @Temporal(TemporalType.DATE)
+    private Date checkingDate;
+    private String checkerLogin;
     @OneToMany
     private Set<Ticket> tickets;
 }
