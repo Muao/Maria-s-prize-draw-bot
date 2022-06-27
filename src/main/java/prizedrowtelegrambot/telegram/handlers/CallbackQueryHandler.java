@@ -15,6 +15,7 @@ public class CallbackQueryHandler {
     public BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
         final String chatId = buttonQuery.getMessage().getChatId().toString();
         final String data = buttonQuery.getData();
+        //todo here is needs to accept or decline donate
         return new SendMessage(chatId, data);
     }
 }
