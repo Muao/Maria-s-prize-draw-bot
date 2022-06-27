@@ -17,11 +17,9 @@ public class Donate {
     private int amount;
     private String login;
     private String userName;
-    @Temporal(TemporalType.DATE)
     private Date date;
     private String charId;
     private boolean checked;
-    @Temporal(TemporalType.DATE)
     private Date checkingDate;
     private String checkerLogin;
     @OneToMany
