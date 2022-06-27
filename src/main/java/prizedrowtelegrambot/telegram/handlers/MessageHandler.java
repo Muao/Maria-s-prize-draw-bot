@@ -1,30 +1,27 @@
 package prizedrowtelegrambot.telegram.handlers;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import prizedrowtelegrambot.bot.BotMessageEnum;
-import prizedrowtelegrambot.bot.ButtonNameEnum;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
+import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.DonateService;
+import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.ReplyKeyboardMaker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
-public class MessageHandler {
-    ReplyKeyboardMaker replyKeyboardMaker;
-    DonateService donateService;
-
-    public BotApiMethod<?> answerMessage(Message message) {
+public record MessageHandler(
+        AdminMessageService adminMessageService,
+        ReplyKeyboardMaker replyKeyboardMaker,
+        DonateService donateService
+) {
+    public BotApiMethod<?> answerMessage(Message message, Bot bot) {
         final DonateDto donateDto = new DonateDto(message);
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
@@ -36,7 +33,7 @@ public class MessageHandler {
             case "Payment type 2" -> getPayment2Message(chatId);
             default -> {
                 if (isDigit(inputText)) {
-                    yield paymentProcessing(donateDto, chatId);
+                    yield paymentProcessing(donateDto, chatId, bot);
                 } else {
                     yield new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
                 }
@@ -44,10 +41,10 @@ public class MessageHandler {
         };
     }
 
-    private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
+    private SendMessage paymentProcessing(DonateDto donateDto, String chatId, Bot bot) {
         if (!donateService.isDonateFromUserWithSameAmountExist(donateDto)) {
             final Donate donate = donateService.saveEntity(donateDto);
-            checkPaymentService.startCheckPayment(donate, chatId);
+            adminMessageService.sendCheckPaymentMessageToAllAdmins(donate, bot);
             return afterPayment1Message(chatId, donate);
         } else {
             return new SendMessage(chatId, BotMessageEnum.SAME_PAYMENT_EXIST.getMessage());

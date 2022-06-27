@@ -52,7 +52,7 @@ public class Bot extends SpringWebhookBot {
         } else {
             final Message message = update.getMessage();
             if (message != null) {
-                return messageHandler.answerMessage(update.getMessage());
+                return messageHandler.answerMessage(update.getMessage(), this);
             }
         }
         return null;
