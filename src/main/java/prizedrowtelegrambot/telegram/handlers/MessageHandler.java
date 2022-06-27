@@ -14,6 +14,9 @@ import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.telegram.keyboards.ReplyKeyboardMaker;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
@@ -26,38 +29,42 @@ public class MessageHandler {
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
 
-        if (inputText == null) {
-            throw new IllegalArgumentException();
-        } else if (inputText.equals("/start")) {
-            return getStartMessage(chatId);
-        } else if (inputText.equals(ButtonNameEnum.GET_PAYMENT1_BUTTON.getButtonName())) {
-            return getPayment1Message(chatId);
-        } else if (inputText.equals(ButtonNameEnum.GET_PAYMENT2_BUTTON.getButtonName())) {
-            return getPayment2Message(chatId);
-        } else if (isInputTextNumber(inputText)){
-            if (!donateService.isDonateFromUserWithSameAmountExist(donateDto)) {
-                final Donate donate = donateService.saveEntity(donateDto);
-                return afterPayment1Message(chatId, donate);
-            } else {
-                return new SendMessage(chatId, BotMessageEnum.SAME_PAYMENT_EXIST.getMessage());
+        return switch (inputText) {
+            case null -> throw new IllegalStateException();
+            case "/start" -> getStartMessage(chatId);
+            case "Payment type 1" -> getPayment1Message(chatId);
+            case "Payment type 2" -> getPayment2Message(chatId);
+            default -> {
+                if (isDigit(inputText)) {
+                    yield paymentProcessing(donateDto, chatId);
+                } else {
+                    yield new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+                }
             }
+        };
+    }
+
+    private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
+        if (!donateService.isDonateFromUserWithSameAmountExist(donateDto)) {
+            final Donate donate = donateService.saveEntity(donateDto);
+            checkPaymentService.startCheckPayment(donate, chatId);
+            return afterPayment1Message(chatId, donate);
         } else {
-            return new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+            return new SendMessage(chatId, BotMessageEnum.SAME_PAYMENT_EXIST.getMessage());
         }
     }
 
-    private BotApiMethod<?> afterPayment1Message(String chatId, Donate save) {
+    private SendMessage afterPayment1Message(String chatId, Donate save) {
         return new SendMessage(chatId, BotMessageEnum.AFTER_PAYMENT_MESSAGE.getMessage() + save.toString());
     }
 
     //todo move to service
-    private boolean isInputTextNumber(String inputText) {
-        boolean result;
-        try {
-            Float.parseFloat(inputText);
+    private boolean isDigit(String inputText) {
+        boolean result = false;
+        final Pattern pattern = Pattern.compile("\\d+");
+        final Matcher matcher = pattern.matcher(inputText);
+        if (matcher.matches()) {
             result = true;
-        } catch (NumberFormatException e) {
-            result = false;
         }
         return result;
     }
