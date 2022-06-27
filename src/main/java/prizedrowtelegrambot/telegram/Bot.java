@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
-import prizedrowtelegrambot.bot.BotMessageEnum;
+import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.telegram.handlers.CallbackQueryHandler;
 import prizedrowtelegrambot.telegram.handlers.MessageHandler;
 

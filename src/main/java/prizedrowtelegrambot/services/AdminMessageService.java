@@ -16,16 +16,16 @@ public record AdminMessageService(ChatAdminRepository chatAdminRepository, Inlin
         final String messageForAdmin = getMessageForAdmin(donate);
         admins.forEach(ad -> {
             try {
-                bot.execute(createAdminMessage(ad.getChartId(), messageForAdmin));
+                bot.execute(createAdminMessage(ad.getChartId(), messageForAdmin, donate.getId().toString()));
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private SendMessage createAdminMessage(String chatId, String messageForAdmin) {
+    private SendMessage createAdminMessage(String chatId, String messageForAdmin, String donateId) {
         final SendMessage sendMessage = new SendMessage(chatId, messageForAdmin);
-        sendMessage.setReplyMarkup(inlineKeyboardMaker.getInlineMessageButtons());
+        sendMessage.setReplyMarkup(inlineKeyboardMaker.getInlineMessageButtons(donateId));
         return sendMessage;
     }
 
