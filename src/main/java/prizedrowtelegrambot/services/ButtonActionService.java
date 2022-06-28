@@ -19,9 +19,8 @@ public record ButtonActionService(DonateRepository donateRepository, TicketServi
         final Optional<Donate> optionalDonate = donateRepository.findById(id);
         if(optionalDonate.isPresent()) {
             final Donate donate = optionalDonate.get();
-            final int amount = donate.getAmount();
-            final int ticketPrice = 250;
-            final int ticketsCount = amount/ticketPrice;
+            final int totalNeedsToPay = donate.getTotalNeedsToPay();
+            final int ticketsCount = donate.getAmountOfTickets();
             final Set<Ticket> tickets = new HashSet<>();
             final Set<String> ticketsIds = new HashSet<>();
             for (int i = 0; i < ticketsCount; i++) {
@@ -38,7 +37,7 @@ public record ButtonActionService(DonateRepository donateRepository, TicketServi
             result = String.format("Was created %d ticket/s for user %s with numbers: %s",
                     ticketsIds.size(), donate.getLogin(), String.join(",", ticketsIds));
 
-            userMessageService.sendSuccessConfirmationMessage(bot, amount, ticketsIds, donate.getChatId());
+            userMessageService.sendSuccessConfirmationMessage(bot, totalNeedsToPay, ticketsIds, donate.getChatId());
         }
         return result;
     }

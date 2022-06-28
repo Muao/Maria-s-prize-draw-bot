@@ -12,23 +12,31 @@ import java.util.List;
 
 @Component
 public class InlineKeyboardMaker {
-    public InlineKeyboardMarkup getInlineMessageButtons(String donateId) {
+    public InlineKeyboardMarkup getPaymentActionInlineButtons(String donateId) {
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.ACCEPT);
         final ButtonActionDto decline = new ButtonActionDto(donateId, ButtonAction.DECLINE);
-        keyboard.add(getButton(ButtonNameEnum.GET_APPROVED_BUTTON.getButtonName(), accept.toString()));
-        keyboard.add(getButton(ButtonNameEnum.GET_DECLINE_BUTTON.getButtonName(), decline.toString()));
+        keyboard.add(getButton(ButtonNameEnum.ACCEPT_PAYMENT.getButtonName(), accept.toString()));
+        keyboard.add(getButton(ButtonNameEnum.DECLINE_PAYMENT.getButtonName(), decline.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(String donateId) {
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.USER_PAYMENT_CONFIRMATION);
+        keyboard.add(getButton(ButtonNameEnum.USER_PAYMENT_CONFIRMATION.getButtonName(), accept.toString()));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
 
     private List<InlineKeyboardButton> getButton(String buttonName, String buttonCallBackData) {
-        InlineKeyboardButton button = new InlineKeyboardButton();
+        final InlineKeyboardButton button = new InlineKeyboardButton();
+        final List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         button.setText(buttonName);
         button.setCallbackData(buttonCallBackData);
-
-        List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         keyboardButtonsRow.add(button);
         return keyboardButtonsRow;
     }

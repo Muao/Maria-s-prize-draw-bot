@@ -14,7 +14,8 @@ public class Donate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int amount;
+    private int totalNeedsToPay;
+    private int amountOfTickets;
     private String login;
     private String userName;
     private Date date;

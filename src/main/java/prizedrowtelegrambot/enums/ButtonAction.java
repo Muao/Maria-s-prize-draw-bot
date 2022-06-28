@@ -1,5 +1,5 @@
 package prizedrowtelegrambot.enums;
 
 public enum ButtonAction {
-    ACCEPT, DECLINE
+    ACCEPT, DECLINE, USER_PAYMENT_CONFIRMATION
 }

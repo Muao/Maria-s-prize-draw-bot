@@ -8,11 +8,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
 import prizedrowtelegrambot.dtos.ButtonActionDto;
+import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.ButtonActionService;
 import prizedrowtelegrambot.telegram.Bot;
 
 @Component
-public record CallbackQueryHandler(ButtonActionService buttonActionService) {
+public record CallbackQueryHandler(ButtonActionService buttonActionService, AdminMessageService adminMessageService) {
     public BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
         String actionAnswer;
         final String chatId = buttonQuery.getMessage().getChatId().toString();
@@ -23,13 +24,12 @@ public record CallbackQueryHandler(ButtonActionService buttonActionService) {
            actionAnswer = switch (buttonActionDto.action()){
                 case ACCEPT -> buttonActionService.acceptAction(buttonActionDto.donateId(), user.getUserName(), bot);
                 case DECLINE -> "decline";
+                case USER_PAYMENT_CONFIRMATION -> adminMessageService.sendCheckPaymentMessageToAllAdmins(buttonActionDto.donateId(), bot);
                 default -> throw new IllegalStateException();
             };
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        //todo here is needs to accept or decline donate
         return new SendMessage(chatId, actionAnswer);
     }
 }

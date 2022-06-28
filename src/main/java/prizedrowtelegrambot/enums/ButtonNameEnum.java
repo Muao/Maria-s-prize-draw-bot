@@ -1,10 +1,10 @@
 package prizedrowtelegrambot.enums;
 
 public enum ButtonNameEnum {
-    GET_PAYMENT1_BUTTON("Payment type 1"),
-    GET_PAYMENT2_BUTTON("Payment type 2"),
-    GET_APPROVED_BUTTON("Approve Payment"),
-    GET_DECLINE_BUTTON("Decline Payment");
+    REGISTER("Зробити донат та зареєструватися у розіграші"),
+    ACCEPT_PAYMENT("Approve Payment"),
+    DECLINE_PAYMENT("Decline Payment"),
+    USER_PAYMENT_CONFIRMATION("Я підтверджую що зробив донат! Піревірте будьласка!");
 
     private final String buttonName;
 
