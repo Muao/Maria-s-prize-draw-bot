@@ -41,7 +41,7 @@ public record ButtonActionService(
                 donateRepository.save(donate);
 
                 result = String.format(BotMessageEnum.SUCCESS_CONFIRMATION_ADMIN.getMessage(),
-                        checkerLogin, ticketsIds.size(), donate.getLogin(), String.join(",", ticketsIds));
+                        checkerLogin, ticketsIds.size(), donate.getLogin(), String.join(",\n", ticketsIds));
 
                 userMessageService.sendSuccessConfirmationMessage(bot, totalNeedsToPay, ticketsIds, donate.getChatId());
             } else {

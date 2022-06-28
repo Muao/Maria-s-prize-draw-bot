@@ -56,6 +56,6 @@ public class UserMessageService {
 
     private String getSuccessConfirmationMessage(long totalNeedsToPay, Set<String> ticketsIds) {
         return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
-                totalNeedsToPay, ticketsIds.size(), String.join(",", ticketsIds), drawData);
+                totalNeedsToPay, ticketsIds.size(), String.join(",\n", ticketsIds), drawData);
     }
 }
