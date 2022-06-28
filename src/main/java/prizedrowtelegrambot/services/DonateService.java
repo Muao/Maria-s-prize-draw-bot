@@ -16,7 +16,7 @@ public record DonateService(DonateRepository donateRepository) {
         donate.setUserName(donateDto.getUserName());
         donate.setLogin(donateDto.getLogin());
         donate.setDate(new Date());
-        donate.setCharId(donateDto.getChatId());
+        donate.setChatId(donateDto.getChatId());
         return donateRepository.save(donate);
     }
 

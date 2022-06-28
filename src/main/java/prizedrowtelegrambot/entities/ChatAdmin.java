@@ -15,5 +15,5 @@ public class ChatAdmin {
     private Long id;
     private String login;
     private String userName;
-    private String chartId;
+    private String chatId;
 }

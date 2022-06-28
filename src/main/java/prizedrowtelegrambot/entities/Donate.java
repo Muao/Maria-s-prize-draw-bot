@@ -18,7 +18,7 @@ public class Donate {
     private String login;
     private String userName;
     private Date date;
-    private String charId;
+    private String chatId;
     private boolean checked;
     private Date checkingDate;
     private String checkerLogin;

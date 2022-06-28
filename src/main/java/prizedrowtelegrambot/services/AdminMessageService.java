@@ -1,5 +1,6 @@
 package prizedrowtelegrambot.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -10,15 +11,16 @@ import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
 
 @Service
+@Slf4j
 public record AdminMessageService(ChatAdminRepository chatAdminRepository, InlineKeyboardMaker inlineKeyboardMaker) {
     public void sendCheckPaymentMessageToAllAdmins(Donate donate, Bot bot) {
         final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
         final String messageForAdmin = getMessageForAdmin(donate);
         admins.forEach(ad -> {
             try {
-                bot.execute(createAdminMessage(ad.getChartId(), messageForAdmin, donate.getId().toString()));
+                bot.execute(createAdminMessage(ad.getChatId(), messageForAdmin, donate.getId().toString()));
             } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+                log.error(e.getMessage(), e);
             }
         });
     }
