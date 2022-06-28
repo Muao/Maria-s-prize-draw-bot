@@ -30,6 +30,8 @@ public record CallbackQueryHandler(ButtonActionService buttonActionService, Admi
         } catch (JsonProcessingException e) {
             actionAnswer = "Can't parse button action object " + e.getMessage();
         }
-        return new SendMessage(chatId, actionAnswer);
+        final SendMessage sendMessage = new SendMessage(chatId, actionAnswer);
+        sendMessage.enableHtml(true);
+        return sendMessage;
     }
 }

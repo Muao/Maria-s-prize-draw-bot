@@ -26,8 +26,10 @@ public class UserMessageService {
 
     public void sendSuccessConfirmationMessage(Bot bot, long totalNeedsToPay, Set<String> ticketsIds, String chatId) {
         final String message = getSuccessConfirmationMessage(totalNeedsToPay, ticketsIds);
+        final SendMessage sendMessage = new SendMessage(chatId, message);
+        sendMessage.enableHtml(true);
         try {
-            bot.execute(new SendMessage(chatId, message));
+            bot.execute(sendMessage);
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
         }
@@ -56,6 +58,6 @@ public class UserMessageService {
 
     private String getSuccessConfirmationMessage(long totalNeedsToPay, Set<String> ticketsIds) {
         return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
-                totalNeedsToPay, ticketsIds.size(), String.join(",\n", ticketsIds), drawData);
+                totalNeedsToPay, ticketsIds.size(), String.join("\n", ticketsIds), drawData);
     }
 }

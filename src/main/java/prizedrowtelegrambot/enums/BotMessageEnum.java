@@ -27,7 +27,7 @@ public enum BotMessageEnum {
             Донат на суму %d грн було підтверджено!
             Кількість квітків, що було нараховано: %d
             Номер/и твоїх квітків:
-            %s
+            <strong><ins>%s</ins></strong>
                             
             Якщо маєш бажання, можеш поділитися у своїй сторіз нашим
             постом і тим, що приймаєш участь у такому форматі
@@ -54,7 +54,7 @@ public enum BotMessageEnum {
     SUCCESS_CONFIRMATION_ADMIN("""
             @%s Confirmed payment.
             Was created %d ticket/s for user @%s with numbers:
-            %s
+            <strong><ins>%s</ins></strong>
             """),
 
     USER_PAYMENT_VALIDATION_DONE_BEFORE("""
