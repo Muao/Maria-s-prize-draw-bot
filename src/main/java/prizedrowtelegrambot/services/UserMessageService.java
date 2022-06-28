@@ -18,13 +18,23 @@ import java.util.Set;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class UserMessageService{
+public class UserMessageService {
     final InlineKeyboardMaker inlineKeyboardMaker;
     @Value("${bot.draw-data}") String drawData;
+    @Value("${bot.admin}") String adminLogin;
 
 
-    public void sendSuccessConfirmationMessage(Bot bot, int amount, Set<String> ticketsIds, String chatId) {
-        final String message = getMessage(amount, ticketsIds);
+    public void sendSuccessConfirmationMessage(Bot bot, int totalNeedsToPay, Set<String> ticketsIds, String chatId) {
+        final String message = getSuccessConfirmationMessage(totalNeedsToPay, ticketsIds);
+        try {
+            bot.execute(new SendMessage(chatId, message));
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void sendDeclinePaymentMessage(Bot bot, int totalNeedsToPay, String chatId) {
+        final String message = getDeclinePaymentMessage(totalNeedsToPay);
         try {
             bot.execute(new SendMessage(chatId, message));
         } catch (TelegramApiException e) {
@@ -39,7 +49,12 @@ public class UserMessageService{
         return sendMessage;
     }
 
-    private String getMessage(int amount, Set<String> ticketsIds) {
+    private String getDeclinePaymentMessage(int totalNeedsToPay) {
+        return String.format(BotMessageEnum.DECLINE_PAYMENT_MESSAGE.getMessage(),
+                totalNeedsToPay, adminLogin);
+    }
+
+    private String getSuccessConfirmationMessage(int amount, Set<String> ticketsIds) {
         return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
                 amount, ticketsIds.size(), String.join(",", ticketsIds), drawData);
     }

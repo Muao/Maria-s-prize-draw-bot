@@ -19,16 +19,17 @@ public record CallbackQueryHandler(ButtonActionService buttonActionService, Admi
         final String chatId = buttonQuery.getMessage().getChatId().toString();
         final String data = buttonQuery.getData();
         final User user = buttonQuery.getFrom();
+        final ButtonActionDto buttonActionDto;
         try {
-            final ButtonActionDto buttonActionDto = new ObjectMapper().readValue(data, ButtonActionDto.class);
-           actionAnswer = switch (buttonActionDto.action()){
+            buttonActionDto = new ObjectMapper().readValue(data, ButtonActionDto.class);
+            actionAnswer = switch (buttonActionDto.action()) {
                 case ACCEPT -> buttonActionService.acceptAction(buttonActionDto.donateId(), user.getUserName(), bot);
-                case DECLINE -> "decline";
-                case USER_PAYMENT_CONFIRMATION -> adminMessageService.sendCheckPaymentMessageToAllAdmins(buttonActionDto.donateId(), bot);
-                default -> throw new IllegalStateException();
+                case DECLINE -> buttonActionService.declineAction(buttonActionDto.donateId(), user.getUserName(), bot);
+                case USER_PAYMENT_CONFIRMATION ->
+                        adminMessageService.sendCheckPaymentMessageToAllAdmins(buttonActionDto.donateId(), bot);
             };
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            actionAnswer = "Can't parse button action object " + e.getMessage();
         }
         return new SendMessage(chatId, actionAnswer);
     }

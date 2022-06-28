@@ -44,7 +44,7 @@ public record AdminMessageService(
     }
 
     private String getMessageForAdmin(Donate donate) {
-        return String.format("Please check the new payment: user: %s; name: %s; amount: %d; data: %s",
+        return String.format("Please check the new payment: user: @%s; name: %s; amount: %d uah; data: %s",
                 donate.getLogin(), donate.getUserName(), donate.getTotalNeedsToPay(), donate.getDate());
     }
 }
