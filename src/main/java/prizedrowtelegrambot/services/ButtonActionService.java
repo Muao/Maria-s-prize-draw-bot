@@ -25,7 +25,7 @@ public record ButtonActionService(
         if(optionalDonate.isPresent()) {
             final Donate donate = optionalDonate.get();
             if(!donate.isChecked() && donate.getCheckerLogin() == null) {
-                final int totalNeedsToPay = donate.getTotalNeedsToPay();
+                final long totalNeedsToPay = donate.getTotalNeedsToPay();
                 final int ticketsCount = donate.getAmountOfTickets();
                 final Set<Ticket> tickets = new HashSet<>();
                 final Set<String> ticketsIds = new HashSet<>();
@@ -59,7 +59,7 @@ public record ButtonActionService(
         if(optionalDonate.isPresent()) {
             final Donate donate = optionalDonate.get();
             if (!donate.isChecked() && donate.getCheckerLogin() == null) {
-                final int totalNeedsToPay = donate.getTotalNeedsToPay();
+                final long totalNeedsToPay = donate.getTotalNeedsToPay();
                 donate.setChecked(false);
                 donate.setCheckingDate(new Date());
                 donate.setCheckerLogin(checkerLogin);

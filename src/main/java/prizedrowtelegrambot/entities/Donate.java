@@ -13,8 +13,8 @@ import java.util.Set;
 public class Donate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private int totalNeedsToPay;
+    private long id;
+    private long totalNeedsToPay;
     private int amountOfTickets;
     private String login;
     private String userName;

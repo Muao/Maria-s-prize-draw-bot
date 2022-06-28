@@ -28,7 +28,7 @@ public record AdminMessageService(
             final String messageForAdmin = getMessageForAdmin(donate);
             admins.forEach(ad -> {
                 try {
-                    bot.execute(createAdminMessage(ad.getChatId(), messageForAdmin, donate.getId().toString()));
+                    bot.execute(createAdminMessage(ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
                 } catch (TelegramApiException e) {
                     log.error(e.getMessage(), e);
                 }

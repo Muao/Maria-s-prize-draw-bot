@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Service
 public record DonateService(DonateRepository donateRepository) {
-    public Donate saveEntity(DonateDto donateDto, int totalNeedsToPayment) {
+    public Donate saveEntity(DonateDto donateDto, long totalNeedsToPayment) {
         final Donate donate = new Donate();
         donate.setTotalNeedsToPay(totalNeedsToPayment);
         donate.setAmountOfTickets(Integer.parseInt(donateDto.getInputText()));
@@ -21,7 +21,7 @@ public record DonateService(DonateRepository donateRepository) {
         return donateRepository.save(donate);
     }
 
-    public boolean isDonateFromUserWithSameAmountExist(int totalNeedsToPayment, String login) {
+    public boolean isDonateFromUserWithSameAmountExist(long totalNeedsToPayment, String login) {
         final Set<Donate> entityByAmountAndLogin =
                 donateRepository.getEntityByTotalNeedsToPayAndLogin(totalNeedsToPayment, login);
         return !entityByAmountAndLogin.isEmpty();

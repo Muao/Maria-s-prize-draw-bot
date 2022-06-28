@@ -7,5 +7,5 @@ import java.util.Set;
 
 public interface DonateRepository extends CrudRepository<Donate, Long> {
 
-    Set<Donate> getEntityByTotalNeedsToPayAndLogin(int totalNeedsToPay, String login);
+    Set<Donate> getEntityByTotalNeedsToPayAndLogin(long totalNeedsToPay, String login);
 }

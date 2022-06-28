@@ -45,7 +45,7 @@ public class MessageHandler {
 
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
         final int ticketsAmount = Integer.parseInt(donateDto.getInputText());
-        final int totalNeedsToPayment = ticketsAmount * Integer.parseInt(ticketPrice);
+        final long totalNeedsToPayment = (long) ticketsAmount * Integer.parseInt(ticketPrice);
         if (!donateService.isDonateFromUserWithSameAmountExist(totalNeedsToPayment, donateDto.getLogin())) {
             final Donate donate = donateService.saveEntity(donateDto, totalNeedsToPayment);
             return userMessageService.sendRequestToConfirmPaymentMessage(chatId, donate.getId(), totalNeedsToPayment);

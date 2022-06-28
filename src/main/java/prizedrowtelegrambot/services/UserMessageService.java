@@ -24,7 +24,7 @@ public class UserMessageService {
     @Value("${bot.admin}") String adminLogin;
 
 
-    public void sendSuccessConfirmationMessage(Bot bot, int totalNeedsToPay, Set<String> ticketsIds, String chatId) {
+    public void sendSuccessConfirmationMessage(Bot bot, long totalNeedsToPay, Set<String> ticketsIds, String chatId) {
         final String message = getSuccessConfirmationMessage(totalNeedsToPay, ticketsIds);
         try {
             bot.execute(new SendMessage(chatId, message));
@@ -33,7 +33,7 @@ public class UserMessageService {
         }
     }
 
-    public void sendDeclinePaymentMessage(Bot bot, int totalNeedsToPay, String chatId) {
+    public void sendDeclinePaymentMessage(Bot bot, long totalNeedsToPay, String chatId) {
         final String message = getDeclinePaymentMessage(totalNeedsToPay);
         try {
             bot.execute(new SendMessage(chatId, message));
@@ -42,20 +42,20 @@ public class UserMessageService {
         }
     }
 
-    public SendMessage sendRequestToConfirmPaymentMessage(String chatId, Long donateId, int totalNeedsToPayment) {
+    public SendMessage sendRequestToConfirmPaymentMessage(String chatId, Long donateId, long totalNeedsToPayment) {
         final String message = String.format(BotMessageEnum.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment);
         final SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getUserPaymentConfirmationInlineButtons(donateId.toString()));
         return sendMessage;
     }
 
-    private String getDeclinePaymentMessage(int totalNeedsToPay) {
+    private String getDeclinePaymentMessage(long totalNeedsToPay) {
         return String.format(BotMessageEnum.DECLINE_PAYMENT_MESSAGE.getMessage(),
                 totalNeedsToPay, adminLogin);
     }
 
-    private String getSuccessConfirmationMessage(int amount, Set<String> ticketsIds) {
+    private String getSuccessConfirmationMessage(long totalNeedsToPay, Set<String> ticketsIds) {
         return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
-                amount, ticketsIds.size(), String.join(",", ticketsIds), drawData);
+                totalNeedsToPay, ticketsIds.size(), String.join(",", ticketsIds), drawData);
     }
 }
