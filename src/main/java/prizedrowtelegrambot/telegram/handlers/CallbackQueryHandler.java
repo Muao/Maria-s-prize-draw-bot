@@ -3,7 +3,6 @@ package prizedrowtelegrambot.telegram.handlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -14,7 +13,7 @@ import prizedrowtelegrambot.telegram.Bot;
 
 @Component
 public record CallbackQueryHandler(ButtonActionService buttonActionService, AdminMessageService adminMessageService) {
-    public BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
+    public SendMessage processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
         String actionAnswer;
         final String chatId = buttonQuery.getMessage().getChatId().toString();
         final String data = buttonQuery.getData();
