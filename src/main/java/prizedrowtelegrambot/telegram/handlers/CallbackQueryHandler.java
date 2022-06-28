@@ -9,10 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
 import prizedrowtelegrambot.dtos.ButtonActionDto;
 import prizedrowtelegrambot.services.ButtonActionService;
+import prizedrowtelegrambot.telegram.Bot;
 
 @Component
 public record CallbackQueryHandler(ButtonActionService buttonActionService) {
-    public BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
+    public BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
         String actionAnswer;
         final String chatId = buttonQuery.getMessage().getChatId().toString();
         final String data = buttonQuery.getData();
@@ -20,7 +21,7 @@ public record CallbackQueryHandler(ButtonActionService buttonActionService) {
         try {
             final ButtonActionDto buttonActionDto = new ObjectMapper().readValue(data, ButtonActionDto.class);
            actionAnswer = switch (buttonActionDto.action()){
-                case ACCEPT -> buttonActionService.acceptAction(buttonActionDto.donateId(), user.getUserName());
+                case ACCEPT -> buttonActionService.acceptAction(buttonActionDto.donateId(), user.getUserName(), bot);
                 case DECLINE -> "decline";
                 default -> throw new IllegalStateException();
             };

@@ -48,7 +48,7 @@ public class Bot extends SpringWebhookBot {
     private BotApiMethod<?> handleUpdate(Update update) {
         if (update.hasCallbackQuery()) {
             final CallbackQuery callbackQuery = update.getCallbackQuery();
-            return callbackQueryHandler.processCallbackQuery(callbackQuery);
+            return callbackQueryHandler.processCallbackQuery(callbackQuery, this);
         } else {
             final Message message = update.getMessage();
             if (message != null) {
