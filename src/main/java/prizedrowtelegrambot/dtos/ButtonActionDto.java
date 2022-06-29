@@ -1,15 +1,14 @@
 package prizedrowtelegrambot.dtos;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.SneakyThrows;
+import lombok.*;
 import prizedrowtelegrambot.enums.ButtonAction;
 
 import java.util.HashMap;
 import java.util.Map;
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ButtonActionDto {
     String donateId;
     ButtonAction action;
