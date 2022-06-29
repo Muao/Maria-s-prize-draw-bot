@@ -29,18 +29,28 @@ public class MessageHandler {
         final DonateDto donateDto = new DonateDto(message);
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
-        return switch (inputText) {
-            case null -> throw new IllegalStateException();
-            case "/start" -> getStartMessage(chatId);
-            case "Зробити донат та зареєструватися у розіграші" -> getTicketsAmountMessage(chatId);
-            default -> {
+        if (inputText == null) {
+            throw new IllegalStateException();
+        }
+        SendMessage result;
+        switch (inputText) {
+            case "/start": {
+                result = getStartMessage(chatId);
+                break;
+            }
+            case "Зробити донат та зареєструватися у розіграші": {
+                result = getTicketsAmountMessage(chatId);
+                break;
+            }
+            default: {
                 if (inputDataService.isPositiveDigit(inputText)) {
-                    yield paymentProcessing(donateDto, chatId);
+                    result = paymentProcessing(donateDto, chatId);
                 } else {
-                    yield new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+                    result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
                 }
             }
-        };
+        }
+        return result;
     }
 
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {

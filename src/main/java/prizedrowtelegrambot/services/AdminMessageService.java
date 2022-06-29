@@ -1,5 +1,8 @@
 package prizedrowtelegrambot.services;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,10 +19,12 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public record AdminMessageService(
-        ChatAdminRepository chatAdminRepository,
-        InlineKeyboardMaker inlineKeyboardMaker,
-        DonateRepository donateRepository) {
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+public class AdminMessageService{
+        ChatAdminRepository chatAdminRepository;
+        InlineKeyboardMaker inlineKeyboardMaker;
+        DonateRepository donateRepository;
     public String sendCheckPaymentMessageToAllAdmins(String donateId, Bot bot) {
         final Optional<Donate> optionalDonate = donateRepository.findById(Long.parseLong(donateId));
         if (optionalDonate.isPresent()) {

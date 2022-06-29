@@ -1,5 +1,8 @@
 package prizedrowtelegrambot.services;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
@@ -9,7 +12,10 @@ import java.util.Date;
 import java.util.Set;
 
 @Service
-public record DonateService(DonateRepository donateRepository) {
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+public class DonateService{
+    DonateRepository donateRepository;
     public Donate saveEntity(DonateDto donateDto, long totalNeedsToPayment) {
         final Donate donate = new Donate();
         donate.setTotalNeedsToPay(totalNeedsToPayment);
