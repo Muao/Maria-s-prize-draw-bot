@@ -1,18 +1,25 @@
 package prizedrowtelegrambot.config;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
+import prizedrowtelegrambot.services.ScheduleAppService;
+import prizedrowtelegrambot.services.UserMessageService;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.handlers.CallbackQueryHandler;
 import prizedrowtelegrambot.telegram.handlers.MessageHandler;
 
 
 @Configuration
-@AllArgsConstructor
+@EnableScheduling
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SpringConfig {
-    private final TelegramConfig telegramConfig;
+    TelegramConfig telegramConfig;
 
     @Bean
     public SetWebhook setWebhookInstance() {
@@ -22,8 +29,10 @@ public class SpringConfig {
     @Bean
     public Bot springWebhookBot(SetWebhook setWebhook,
                                 MessageHandler messageHandler,
-                                CallbackQueryHandler callbackQueryHandler) {
-        Bot bot = new Bot(setWebhook, messageHandler, callbackQueryHandler);
+                                CallbackQueryHandler callbackQueryHandler,
+                                ScheduleAppService scheduleAppService,
+                                UserMessageService userMessageService) {
+        Bot bot = new Bot(setWebhook, messageHandler, callbackQueryHandler, scheduleAppService, userMessageService);
 
         bot.setBotPath(telegramConfig.getWebhookPath());
         bot.setBotUsername(telegramConfig.getBotName());

@@ -14,7 +14,7 @@ import java.util.Set;
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class DonateService{
+public class DonateService {
     DonateRepository donateRepository;
     public Donate saveEntity(DonateDto donateDto, long totalNeedsToPayment) {
         final Donate donate = new Donate();
@@ -31,5 +31,9 @@ public class DonateService{
         final Set<Donate> entityByAmountAndLogin =
                 donateRepository.getEntityByTotalNeedsToPayAndLogin(totalNeedsToPayment, login);
         return !entityByAmountAndLogin.isEmpty();
+    }
+
+    public long getCheckedTotalNeedsToPay(){
+        return donateRepository.getTotalNeedsToPayConfirmedSum();
     }
 }

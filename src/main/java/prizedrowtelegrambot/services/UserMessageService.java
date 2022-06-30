@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
+import prizedrowtelegrambot.telegram.keyboards.ReplyKeyboardMaker;
 
 import java.util.Set;
 
@@ -20,9 +22,22 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserMessageService {
     final InlineKeyboardMaker inlineKeyboardMaker;
+    final ReplyKeyboardMaker replyKeyboardMaker;
+    final DonateService donateService;
     @Value("${bot.draw-data}") String drawData;
     @Value("${bot.admin}") String adminLogin;
+    @Value("${bot.card-number}") String cardNumber;
 
+    public SendMessage getStartMessage(String chatId) {
+        final SendMessage sendMessage = new SendMessage(chatId, BotMessageEnum.INTRO_MESSAGE.getMessage());
+        sendMessage.enableMarkdown(true);
+        sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
+        return sendMessage;
+    }
+
+    public SendMessage getTicketsAmountMessage(String chatId) {
+        return new SendMessage(chatId, BotMessageEnum.TICKETS_AMOUNT_MESSAGE.getMessage());
+    }
 
     public void sendSuccessConfirmationMessage(Bot bot, long totalNeedsToPay, Set<String> ticketsIds, String chatId) {
         final String message = getSuccessConfirmationMessage(totalNeedsToPay, ticketsIds);
@@ -45,7 +60,7 @@ public class UserMessageService {
     }
 
     public SendMessage sendRequestToConfirmPaymentMessage(String chatId, Long donateId, long totalNeedsToPayment) {
-        final String message = String.format(BotMessageEnum.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment);
+        final String message = String.format(BotMessageEnum.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment, cardNumber);
         final SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getUserPaymentConfirmationInlineButtons(donateId.toString()));
         return sendMessage;
@@ -59,5 +74,17 @@ public class UserMessageService {
     private String getSuccessConfirmationMessage(long totalNeedsToPay, Set<String> ticketsIds) {
         return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
                 totalNeedsToPay, ticketsIds.size(), String.join("\n", ticketsIds), drawData);
+    }
+
+    public SendMessage getStopTakingDonatesMessage(DonateDto donateDto) {
+        return new SendMessage(donateDto.getChatId(), String.format(
+                BotMessageEnum.STOP_TAKING_DONATES_MESSAGE.getMessage(),
+                donateDto.getLogin(), cardNumber));
+    }
+
+    public SendMessage getStopDrawMessage(DonateDto donateDto) {
+        return new SendMessage(donateDto.getChatId(), String.format(
+                BotMessageEnum.STOP_DRAW_MESSAGE.getMessage(),
+                donateDto.getLogin(), donateService.getCheckedTotalNeedsToPay(), cardNumber));
     }
 }

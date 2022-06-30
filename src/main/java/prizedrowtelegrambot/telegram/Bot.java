@@ -7,11 +7,13 @@ import lombok.experimental.FieldDefaults;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
+import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.enums.BotMessageEnum;
+import prizedrowtelegrambot.services.ScheduleAppService;
+import prizedrowtelegrambot.services.UserMessageService;
 import prizedrowtelegrambot.telegram.handlers.CallbackQueryHandler;
 import prizedrowtelegrambot.telegram.handlers.MessageHandler;
 
@@ -25,13 +27,21 @@ public class Bot extends SpringWebhookBot {
     String botUsername;
     String botToken;
 
-    MessageHandler messageHandler;
-    CallbackQueryHandler callbackQueryHandler;
+    final MessageHandler messageHandler;
+    final CallbackQueryHandler callbackQueryHandler;
+    final ScheduleAppService scheduleAppService;
+    final UserMessageService userMessageService;
 
-    public Bot(SetWebhook setWebhook, MessageHandler messageHandler, CallbackQueryHandler callbackQueryHandler) {
+    public Bot(SetWebhook setWebhook,
+               MessageHandler messageHandler,
+               CallbackQueryHandler callbackQueryHandler,
+               ScheduleAppService scheduleAppService,
+               UserMessageService userMessageService) {
         super(setWebhook);
         this.messageHandler = messageHandler;
         this.callbackQueryHandler = callbackQueryHandler;
+        this.scheduleAppService = scheduleAppService;
+        this.userMessageService = userMessageService;
     }
 
     @Override
@@ -46,15 +56,28 @@ public class Bot extends SpringWebhookBot {
 
     @Nullable
     private BotApiMethod<?> handleUpdate(Update update) {
+        SendMessage result = null;
         if (update.hasCallbackQuery()) {
-            final CallbackQuery callbackQuery = update.getCallbackQuery();
-            return callbackQueryHandler.processCallbackQuery(callbackQuery, this);
+            result = callbackQueryHandler.processCallbackQuery(update.getCallbackQuery(), this);
         } else {
             final Message message = update.getMessage();
             if (message != null) {
-                return messageHandler.answerMessage(update.getMessage());
+                final DonateDto donateDto = new DonateDto(message);
+                switch (scheduleAppService.getScheduledStopAction()) {
+                    case STOP_GETTING_DONATES: {
+                        result = userMessageService.getStopTakingDonatesMessage(donateDto);
+                        break;
+                    }
+                    case STOP_DRAW: {
+                        result = userMessageService.getStopDrawMessage(donateDto);
+                        break;
+                    }
+                    default: {
+                        result = messageHandler.answerMessage(donateDto);
+                    }
+                }
             }
         }
-        return null;
+        return result;
     }
 }
