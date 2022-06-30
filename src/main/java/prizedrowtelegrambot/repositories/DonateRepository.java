@@ -15,4 +15,6 @@ public interface DonateRepository extends CrudRepository<Donate, Long> {
 
     @Query("SELECT COUNT(d.id) FROM Donate d WHERE d.checked is true")
     int getCountOfApprovedDonations();
+
+    Donate findByTicketsId(long id);
 }

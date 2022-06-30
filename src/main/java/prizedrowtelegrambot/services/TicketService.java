@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import prizedrowtelegrambot.entities.Ticket;
 import prizedrowtelegrambot.repositories.TicketRepository;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -26,7 +27,17 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    public Set<Long> getAllTicketsIds(){
-        return ticketRepository.getTicketsIds();
+    public List<Ticket> findAll(){
+        return StreamSupport.stream(ticketRepository.findAll().spliterator(), true)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getAllTicketsAsStrings(Iterable<Ticket> tickets) {
+        return StreamSupport.stream(tickets.spliterator(), true)
+                .map(Ticket::toString).collect(Collectors.toList());
+    }
+
+    public Optional<Ticket> findById(long id){
+        return ticketRepository.findById(id);
     }
 }

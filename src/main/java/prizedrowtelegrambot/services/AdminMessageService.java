@@ -15,6 +15,7 @@ import prizedrowtelegrambot.repositories.DonateRepository;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,5 +52,25 @@ public class AdminMessageService{
     private String getMessageForAdmin(Donate donate) {
         return String.format("Please check the new payment: user: @%s; name: %s; amount: %d uah; data: %s",
                 donate.getLogin(), donate.getUserName(), donate.getTotalNeedsToPay(), donate.getDate());
+    }
+
+    public void sendWinningMessage(int iteration, String chatId, String login, Long ticketId, Bot bot) {
+        final String message = String.format(BotMessageEnum.WINNING_ADMIN_MESSAGE.getMessage(),
+                iteration, login, ticketId);
+        try {
+            bot.execute(new SendMessage(chatId, message));
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void sendStartDrawMessage(String chatId, Bot bot, List<String> tickets) {
+        final String allTicketIds = String.join("\n", tickets);
+        final String message = String.format(BotMessageEnum.START_DRAW_MESSAGE.getMessage(), allTicketIds);
+        try {
+            bot.execute(new SendMessage(chatId, message));
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

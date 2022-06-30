@@ -102,4 +102,13 @@ public class UserMessageService {
                 BotMessageEnum.STOP_DRAW_MESSAGE.getMessage(),
                 donateDto.getLogin(), donateService.getCheckedTotalNeedsToPay(), cardNumber));
     }
+
+    public void sendWinningMessage(String chatId, String login, Long ticketId, Bot bot) {
+        final String message = String.format(BotMessageEnum.WINNING_MESSAGE.getMessage(), login, ticketId);
+        try {
+            bot.execute(new SendMessage(chatId, message));
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

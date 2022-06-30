@@ -40,4 +40,8 @@ public class DonateService {
     public int getCountOfApprovedDonations(){
         return donateRepository.getCountOfApprovedDonations();
     }
+
+    public Donate findByTicketsId(long id){
+        return donateRepository.findByTicketsId(id);
+    }
 }

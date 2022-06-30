@@ -11,7 +11,9 @@ import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.services.InputDataService;
+import prizedrowtelegrambot.services.RandomDrawService;
 import prizedrowtelegrambot.services.UserMessageService;
+import prizedrowtelegrambot.telegram.Bot;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,9 +22,11 @@ public class MessageHandler {
     final UserMessageService userMessageService;
     final DonateService donateService;
     final InputDataService inputDataService;
+
+    final RandomDrawService randomDrawService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
-    public SendMessage answerMessage(DonateDto donateDto) {
+    public SendMessage answerMessage(DonateDto donateDto, Bot bot) {
         SendMessage result;
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
@@ -37,6 +41,11 @@ public class MessageHandler {
             }
             case "Зробити донат та зареєструватися у розіграші": {
                 result = userMessageService.getTicketsAmountMessage(chatId);
+                break;
+            }
+
+            case "Start draw": {
+                result = randomDrawService.startDraw(chatId, bot);
                 break;
             }
             default: {
