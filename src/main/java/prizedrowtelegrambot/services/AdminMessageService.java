@@ -17,15 +17,18 @@ import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class AdminMessageService{
-        ChatAdminRepository chatAdminRepository;
-        InlineKeyboardMaker inlineKeyboardMaker;
-        DonateRepository donateRepository;
+public class AdminMessageService {
+    ChatAdminRepository chatAdminRepository;
+    InlineKeyboardMaker inlineKeyboardMaker;
+    DonateRepository donateRepository;
+    TicketService ticketService;
+
     public String sendCheckPaymentMessageToAllAdmins(String donateId, Bot bot) {
         final Optional<Donate> optionalDonate = donateRepository.findById(Long.parseLong(donateId));
         if (optionalDonate.isPresent()) {
@@ -34,7 +37,8 @@ public class AdminMessageService{
             final String messageForAdmin = getMessageForAdmin(donate);
             admins.forEach(ad -> {
                 try {
-                    bot.execute(createAdminMessage(ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
+                    bot.execute(createPaymentValidationMessage(
+                            ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
                 } catch (TelegramApiException e) {
                     log.error(e.getMessage(), e);
                 }
@@ -43,7 +47,7 @@ public class AdminMessageService{
         return BotMessageEnum.AFTER_PAYMENT_MESSAGE.getMessage();
     }
 
-    private SendMessage createAdminMessage(String chatId, String messageForAdmin, String donateId) {
+    private SendMessage createPaymentValidationMessage(String chatId, String messageForAdmin, String donateId) {
         final SendMessage sendMessage = new SendMessage(chatId, messageForAdmin);
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getPaymentActionInlineButtons(donateId));
         return sendMessage;
@@ -72,5 +76,11 @@ public class AdminMessageService{
         } catch (TelegramApiException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public SendMessage getConfirmedUserList(String chatId) {
+        final Set<String> usersWithTickets = ticketService.getUserWithTickets();
+        final String usersWithTicketsMessageString = String.join("\n", usersWithTickets);
+        return new SendMessage(chatId, usersWithTicketsMessageString);
     }
 }

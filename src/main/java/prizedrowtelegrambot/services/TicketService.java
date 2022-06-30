@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import prizedrowtelegrambot.entities.Ticket;
 import prizedrowtelegrambot.repositories.TicketRepository;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -27,7 +30,7 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    public List<Ticket> findAll(){
+    public List<Ticket> findAll() {
         return StreamSupport.stream(ticketRepository.findAll().spliterator(), true)
                 .collect(Collectors.toList());
     }
@@ -37,7 +40,11 @@ public class TicketService {
                 .map(Ticket::toString).collect(Collectors.toList());
     }
 
-    public Optional<Ticket> findById(long id){
+    public Set<String> getUserWithTickets() {
+        return ticketRepository.getUserWithTickets();
+    }
+
+    public Optional<Ticket> findById(long id) {
         return ticketRepository.findById(id);
     }
 }

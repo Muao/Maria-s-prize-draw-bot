@@ -10,4 +10,7 @@ public interface TicketRepository extends CrudRepository<Ticket, Long> {
 
     @Query("SELECT t.id FROM Ticket t")
     Set<Long>getTicketsIds();
+
+    @Query("SELECT concat(t.login, ' have ', count(t.ticketId)) as user_to_tickets FROM Ticket t group by t.login")
+    Set<String> getUserWithTickets();
 }
