@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.enums.BotMessageEnum;
@@ -24,14 +25,28 @@ public class UserMessageService {
     final InlineKeyboardMaker inlineKeyboardMaker;
     final ReplyKeyboardMaker replyKeyboardMaker;
     final DonateService donateService;
+    final ChatAdminService chatAdminService;
     @Value("${bot.draw-data}") String drawData;
     @Value("${bot.admin}") String adminLogin;
     @Value("${bot.card-number}") String cardNumber;
 
-    public SendMessage getStartMessage(String chatId) {
-        final SendMessage sendMessage = new SendMessage(chatId, BotMessageEnum.INTRO_MESSAGE.getMessage());
+    public SendMessage getStartMessage(String chatId, String login) {
+        SendMessage sendMessage;
+        ReplyKeyboardMarkup replyKeyboardMarkup;
+        if (chatAdminService.isAdminUser(login)) {
+            replyKeyboardMarkup = replyKeyboardMaker.getAdminKeyboardMarkup();
+            final int countOfApprovedDonations = donateService.getCountOfApprovedDonations();
+            final String adminMessage = String.format(
+                    BotMessageEnum.INTRO_ADMIN_MESSAGE.getMessage(),
+                    login, countOfApprovedDonations);
+            sendMessage = new SendMessage(chatId, adminMessage);
+        } else {
+            replyKeyboardMarkup = replyKeyboardMaker.getUserMenuKeyboard();
+            sendMessage = new SendMessage(chatId, BotMessageEnum.INTRO_MESSAGE.getMessage());
+        }
         sendMessage.enableMarkdown(true);
-        sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
         return sendMessage;
     }
 

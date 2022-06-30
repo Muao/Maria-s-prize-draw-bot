@@ -26,12 +26,13 @@ public class MessageHandler {
         SendMessage result;
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
+        final String login = donateDto.getLogin();
         if (inputText == null) {
             throw new IllegalStateException();
         }
         switch (inputText) {
             case "/start": {
-                result = userMessageService.getStartMessage(chatId);
+                result = userMessageService.getStartMessage(chatId, login);
                 break;
             }
             case "Зробити донат та зареєструватися у розіграші": {
