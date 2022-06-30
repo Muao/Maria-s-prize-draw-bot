@@ -12,4 +12,7 @@ public interface DonateRepository extends CrudRepository<Donate, Long> {
 
     @Query("SELECT SUM(d.totalNeedsToPay) FROM Donate d WHERE d.checked is true")
     long getTotalNeedsToPayConfirmedSum();
+
+    @Query("SELECT COUNT(d.id) FROM Donate d WHERE d.checked is true")
+    int getCountOfApprovedDonations();
 }

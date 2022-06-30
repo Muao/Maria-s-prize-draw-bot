@@ -36,4 +36,8 @@ public class DonateService {
     public long getCheckedTotalNeedsToPay(){
         return donateRepository.getTotalNeedsToPayConfirmedSum();
     }
+
+    public int getCountOfApprovedDonations(){
+        return donateRepository.getCountOfApprovedDonations();
+    }
 }
