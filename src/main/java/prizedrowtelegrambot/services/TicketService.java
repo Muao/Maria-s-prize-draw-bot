@@ -8,6 +8,7 @@ import prizedrowtelegrambot.entities.Ticket;
 import prizedrowtelegrambot.repositories.TicketRepository;
 
 import java.util.Date;
+import java.util.Set;
 
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -23,5 +24,9 @@ public class TicketService {
         ticket.setLogin(login);
 
         return ticketRepository.save(ticket);
+    }
+
+    public Set<Long> getAllTicketsIds(){
+        return ticketRepository.getTicketsIds();
     }
 }
