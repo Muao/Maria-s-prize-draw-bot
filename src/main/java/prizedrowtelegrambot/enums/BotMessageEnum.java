@@ -19,12 +19,14 @@ public enum BotMessageEnum {
             "Hello, %s!\n" +
                     "Now amount of approved donates is: %d"
     ),
+
     TICKETS_AMOUNT_MESSAGE("Напиши кількість квитків, які плануєш придбати (лише цифру)"),
 
     PAYMENT_MESSAGE(
             "Дякую за твою участь!\n" +
                     "Перекажи будь-ласка суму %d грн на картку %s\n"
     ),
+
     AFTER_PAYMENT_MESSAGE("Дякуємо за твою оплату! Адмін підтвердить твій запит протягом 24 годин максимум."),
 
     SUCCESS_CONFIRMATION_MESSAGE(
@@ -50,8 +52,11 @@ public enum BotMessageEnum {
     ),
 
     DECLINE_PAYMENT_MESSAGE_ADMIN("Payment for %d uah by @%s was declined by @%s"),
+
     NON_COMMAND_MESSAGE("Невідома команда або невірний формат ввода суми: повиинні бути лише цифри"),
+
     EXCEPTION_WHAT_THE_FUCK("Something went wrong"),
+
     SAME_TICKETS_AMOUNT_ALREADY_EXIST("Ви вже купували таку ж кількість квитків"),
 
     CAN_NOT_GET_DONATE_ENTITY("Can't get Donate entity with id %s"),
@@ -68,6 +73,7 @@ public enum BotMessageEnum {
                     "Data: %s\n" +
                     "Payment confirm: %b\n"
     ),
+
     STOP_TAKING_DONATES_MESSAGE(
             "Вітаємо тебе, %s!\n" +
                     "Нажаль прийом донатів для участі в розігращі\n" +
@@ -88,6 +94,7 @@ public enum BotMessageEnum {
                     "%s\n" +
                     "Будь впевнений, гроші дійдуть до адресата!"
     ),
+
     START_DRAW_MESSAGE(
             "Всі квитки, що беруть участь у розігращі\n" +
                     "\n" +
@@ -95,7 +102,9 @@ public enum BotMessageEnum {
                     "\n" +
                     "Розіграш почнеться за 3 секунди..."
 
-    ), WINNING_MESSAGE(
+    ),
+
+    WINNING_MESSAGE(
             "Вітаємо %s з перемогою у розігращі!\n" +
                     "Виграв твій квиток %s \n" +
                     "Наші майстрині зв’яжуться з тобою особисто задля уточнення " +
@@ -104,11 +113,14 @@ public enum BotMessageEnum {
                     "Доставка Україною: безкоштовна\n" +
                     "Доставка за кордон: за домовленістю, бо багато нюансів"
     ),
+
     WINNING_ADMIN_MESSAGE(
             "Winner# %d\n" +
                     "User: %s\n" +
                     "Ticket: %s"
-    );
+    ),
+
+    START_DRAW_CONFIRMATION_MESSAGE("Start the draw?");
 
     private final String message;
 

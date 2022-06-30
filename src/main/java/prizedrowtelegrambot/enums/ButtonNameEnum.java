@@ -10,9 +10,9 @@ public enum ButtonNameEnum {
 
     START_DRAW("Start draw"),
 
-    GET_CONFIRMED_USERS_LIST("Get confirmed users");
+    GET_CONFIRMED_USERS_LIST("Get confirmed users"),
 
-
+    START_DRAW_CONFIRMATION("----------------I'm sure. Start the draw!----------------");
 
     private final String buttonName;
 

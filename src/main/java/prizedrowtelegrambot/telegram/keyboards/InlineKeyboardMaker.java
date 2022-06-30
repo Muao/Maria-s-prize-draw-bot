@@ -23,6 +23,15 @@ public class InlineKeyboardMaker {
         return inlineKeyboardMarkup;
     }
 
+    public InlineKeyboardMarkup getStartDrawValidationMessage(){
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.START_DRAW_CONFIRMATION);
+        keyboard.add(getButton(ButtonNameEnum.START_DRAW_CONFIRMATION.getButtonName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
     public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(String donateId) {
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.USER_PAYMENT_CONFIRMATION);

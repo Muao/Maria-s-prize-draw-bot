@@ -9,8 +9,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.enums.BotMessageEnum;
-import prizedrowtelegrambot.services.*;
-import prizedrowtelegrambot.telegram.Bot;
+import prizedrowtelegrambot.services.AdminMessageService;
+import prizedrowtelegrambot.services.DonateService;
+import prizedrowtelegrambot.services.InputDataService;
+import prizedrowtelegrambot.services.UserMessageService;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -19,11 +21,10 @@ public class MessageHandler {
     final UserMessageService userMessageService;
     final DonateService donateService;
     final InputDataService inputDataService;
-    final RandomDrawService randomDrawService;
     final AdminMessageService adminMessageService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
-    public SendMessage answerMessage(DonateDto donateDto, Bot bot) {
+    public SendMessage answerMessage(DonateDto donateDto) {
         SendMessage result;
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
@@ -42,7 +43,7 @@ public class MessageHandler {
             }
 
             case "Start draw": {
-                result = randomDrawService.startDraw(chatId, bot);
+                result = adminMessageService.startDrawConfirmation(chatId);
                 break;
             }
             case "Get confirmed users": {

@@ -73,7 +73,7 @@ public class Bot extends SpringWebhookBot {
                         break;
                     }
                     default: {
-                        result = messageHandler.answerMessage(donateDto, this);
+                        result = messageHandler.answerMessage(donateDto);
                     }
                 }
             }

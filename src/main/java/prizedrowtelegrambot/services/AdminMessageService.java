@@ -83,4 +83,11 @@ public class AdminMessageService {
         final String usersWithTicketsMessageString = String.join("\n", usersWithTickets);
         return new SendMessage(chatId, usersWithTicketsMessageString);
     }
+
+    public SendMessage startDrawConfirmation(String chatId) {
+        final SendMessage sendMessage = new SendMessage(
+                chatId, BotMessageEnum.START_DRAW_CONFIRMATION_MESSAGE.getMessage());
+        sendMessage.setReplyMarkup(inlineKeyboardMaker.getStartDrawValidationMessage());
+        return sendMessage;
+    }
 }

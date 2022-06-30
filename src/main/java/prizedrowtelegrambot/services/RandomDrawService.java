@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.entities.Ticket;
 import prizedrowtelegrambot.telegram.Bot;
@@ -23,12 +22,12 @@ public class RandomDrawService {
     UserMessageService userMessageService;
     AdminMessageService adminMessageService;
 
-    public SendMessage startDraw(String chatId, Bot bot) {
+    public String startDraw(String chatId, Bot bot) {
         final List<Ticket> allTickets = ticketService.findAll();
         final List<String> tickets = ticketService.getAllTicketsAsStrings(allTickets);
         adminMessageService.sendStartDrawMessage(chatId, bot, tickets);
         processDraw(chatId, allTickets, bot);
-        return new SendMessage(chatId, "Продам гараж");
+        return "Продам гараж";
     }
 
     public void processDraw(String chatId, List<Ticket> allTickets, Bot bot) {

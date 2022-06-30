@@ -10,9 +10,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
 import prizedrowtelegrambot.dtos.ButtonActionDto;
-import prizedrowtelegrambot.enums.ButtonAction;
 import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.ButtonActionService;
+import prizedrowtelegrambot.services.RandomDrawService;
 import prizedrowtelegrambot.telegram.Bot;
 
 @Component
@@ -21,6 +21,7 @@ import prizedrowtelegrambot.telegram.Bot;
 public class CallbackQueryHandler {
     ButtonActionService buttonActionService;
     AdminMessageService adminMessageService;
+    RandomDrawService randomDrawService;
 
     public SendMessage processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
         String actionAnswer = "";
@@ -42,6 +43,9 @@ public class CallbackQueryHandler {
                 case USER_PAYMENT_CONFIRMATION: {
                     actionAnswer = adminMessageService.sendCheckPaymentMessageToAllAdmins(buttonActionDto.getDonateId(), bot);
                     break;
+                }
+                case START_DRAW_CONFIRMATION: {
+                    actionAnswer = randomDrawService.startDraw(chatId, bot);
                 }
             }
 
