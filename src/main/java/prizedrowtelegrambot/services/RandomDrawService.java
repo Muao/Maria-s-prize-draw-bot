@@ -7,6 +7,7 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 import org.springframework.stereotype.Service;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.entities.Ticket;
+import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.telegram.Bot;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class RandomDrawService {
         final List<String> tickets = ticketService.getAllTicketsAsStrings(allTickets);
         adminMessageService.sendStartDrawMessage(chatId, bot, tickets);
         processDraw(chatId, allTickets, bot);
-        return "Продам гараж";
+        return BotMessage.END_DRAW_ADMIN_MESSAGE.getMessage();
     }
 
     public void processDraw(String chatId, List<Ticket> allTickets, Bot bot) {

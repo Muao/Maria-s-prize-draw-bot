@@ -6,11 +6,11 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
-import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.repositories.DonateRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -19,17 +19,6 @@ import java.util.Set;
 public class DonateService {
     final DonateRepository donateRepository;
     @Value("${bot.ticket-price}") String ticketPrice;
-
-    public Donate saveEntity(DonateDto donateDto, long totalNeedsToPayment) {
-        final Donate donate = new Donate();
-        donate.setTotalNeedsToPay(totalNeedsToPayment);
-        donate.setAmountOfTickets(Integer.parseInt(donateDto.getInputText()));
-        donate.setUserName(donateDto.getUserName());
-        donate.setLogin(donateDto.getLogin());
-        donate.setDate(new Date());
-        donate.setChatId(donateDto.getChatId());
-        return donateRepository.save(donate);
-    }
 
     public Donate saveEntity(long totalNeedsToPayment, User user, String chatId) {
         final Donate donate = new Donate();
@@ -58,5 +47,9 @@ public class DonateService {
 
     public Donate findByTicketsId(long id) {
         return donateRepository.findByTicketsId(id);
+    }
+
+    public List<String> getAllChatIdsWithConfirmedDonates(){
+        return donateRepository.getChatIdsWithConfirmedDonates();
     }
 }

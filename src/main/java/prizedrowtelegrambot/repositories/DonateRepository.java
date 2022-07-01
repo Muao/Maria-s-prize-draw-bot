@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import prizedrowtelegrambot.entities.Donate;
 
+import java.util.List;
 import java.util.Set;
 
 public interface DonateRepository extends CrudRepository<Donate, Long> {
@@ -17,4 +18,7 @@ public interface DonateRepository extends CrudRepository<Donate, Long> {
     int getCountOfApprovedDonations();
 
     Donate findByTicketsId(long id);
+
+    @Query("SELECT DISTINCT d.chatId FROM Donate d WHERE d.checked IS TRUE")
+    List<String> getChatIdsWithConfirmedDonates();
 }

@@ -13,6 +13,7 @@ import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.services.InputDataService;
 import prizedrowtelegrambot.services.UserMessageService;
+import prizedrowtelegrambot.telegram.Bot;
 
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class MessageHandler {
     final AdminMessageService adminMessageService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
-    public SendMessage answerMessage(DonateDto donateDto) {
+    public SendMessage answerMessage(DonateDto donateDto, Bot bot) {
         SendMessage result;
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
@@ -37,7 +38,7 @@ public class MessageHandler {
         final Optional<Button> inputAsButton = convertToButton(inputText);
         if (inputAsButton.isPresent()) {
             final Button button = inputAsButton.get();
-            result = buttonAction(chatId, login, button);
+            result = buttonAction(chatId, login, button, bot);
         } else {
             result = noButtonAction(donateDto, chatId, inputText);
         }
@@ -54,7 +55,7 @@ public class MessageHandler {
         return result;
     }
 
-    private SendMessage buttonAction(String chatId, String login, Button button) {
+    private SendMessage buttonAction(String chatId, String login, Button button, Bot bot) {
         SendMessage result;
         switch (button) {
             case START: {
@@ -72,6 +73,10 @@ public class MessageHandler {
             case GET_CONFIRMED_USERS_LIST: {
                 result = adminMessageService.getConfirmedUserList(chatId);
                 break;
+            }
+            case SEND_15_MIN_REMINDER: {
+                result = adminMessageService.send15MinReminderToAllUsers(bot, chatId);
+                        break;
             }
             default: {
                 result = new SendMessage(chatId, BotMessage.NON_COMMAND_MESSAGE.getMessage());

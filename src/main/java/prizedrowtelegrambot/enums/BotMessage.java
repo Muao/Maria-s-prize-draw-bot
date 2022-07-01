@@ -87,7 +87,7 @@ public enum BotMessage {
 
     STOP_DRAW_MESSAGE(
             "Вітаємо тебе, %s!\n" +
-                    "Нажаль розігращ вже завершено.\n" +
+                    "Нажаль розіграш вже завершено.\n" +
                     "Нам вдалося зібрати %s грн. " +
                     "Усі отримані гроші,\n" +
                     "окрім 8000 грн на зарплатню та матеріали, ми відправили\n" +
@@ -123,8 +123,20 @@ public enum BotMessage {
                     "Ticket: %s"
     ),
 
-    START_DRAW_CONFIRMATION_MESSAGE("Start the draw?");
+    START_DRAW_CONFIRMATION_MESSAGE("Start the draw?"),
 
+    SEND_15_MIN_MESSAGE(
+            "Привіт! Розіграш почнеться за 15 хвилин.\n" +
+                    "Чекаємо на тебе! Переходь за посиланням \n" +
+                    "%s"
+    ),
+
+    ALREADY_SENT("Message sent to %d user/s"),
+
+    END_DRAW_ADMIN_MESSAGE(
+            "Поздравляю! Ты закрыл розыгрыш. \n" +
+                    "Не забудь скинуть ссылку на стрим"
+    );
     private final String message;
 
     BotMessage(String message) {

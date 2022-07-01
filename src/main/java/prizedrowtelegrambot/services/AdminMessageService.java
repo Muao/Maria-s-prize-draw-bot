@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -20,26 +21,27 @@ import java.util.Set;
 
 @Service
 @Slf4j
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class AdminMessageService {
-    ChatAdminRepository chatAdminRepository;
-    InlineKeyboardMaker inlineKeyboardMaker;
-    DonateService donateService;
-    TicketService ticketService;
+    final ChatAdminRepository chatAdminRepository;
+    final InlineKeyboardMaker inlineKeyboardMaker;
+    final DonateService donateService;
+    final TicketService ticketService;
+    @Value("${bot.draw-link}") String drawLink;
 
     public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
         final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
-            final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
-            final String messageForAdmin = getMessageForAdmin(donate);
-            admins.forEach(ad -> {
-                try {
-                    bot.execute(createPaymentValidationMessage(
-                            ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
-                } catch (TelegramApiException e) {
-                    log.error(e.getMessage(), e);
-                }
-            });
+        final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
+        final String messageForAdmin = getMessageForAdmin(donate);
+        admins.forEach(ad -> {
+            try {
+                bot.execute(createPaymentValidationMessage(
+                        ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
+            } catch (TelegramApiException e) {
+                log.error(e.getMessage(), e);
+            }
+        });
         return BotMessage.AFTER_PAYMENT_MESSAGE.getMessage();
     }
 
@@ -85,5 +87,23 @@ public class AdminMessageService {
                 chatId, BotMessage.START_DRAW_CONFIRMATION_MESSAGE.getMessage());
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getStartDrawValidationMessage());
         return sendMessage;
+    }
+
+    public SendMessage send15MinReminderToAllUsers(Bot bot, String chatId) {
+        final String message = String.format(BotMessage.SEND_15_MIN_MESSAGE.getMessage(), drawLink);
+        final int sendMessageCount = sendReminderToAllUsers(bot, message);
+        return new SendMessage(chatId, String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount));
+    }
+
+    public int sendReminderToAllUsers(Bot bot, String message) {
+        final List<String> chatIdsWithConfirmedDonates = donateService.getAllChatIdsWithConfirmedDonates();
+        chatIdsWithConfirmedDonates.forEach(chatId -> {
+            try {
+                bot.execute(new SendMessage(chatId, message));
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return chatIdsWithConfirmedDonates.size();
     }
 }
