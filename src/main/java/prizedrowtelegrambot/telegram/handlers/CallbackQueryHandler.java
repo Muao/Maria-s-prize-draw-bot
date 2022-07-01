@@ -13,6 +13,7 @@ import prizedrowtelegrambot.dtos.ButtonActionDto;
 import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.ButtonActionService;
 import prizedrowtelegrambot.services.RandomDrawService;
+import prizedrowtelegrambot.services.ScheduleAppService;
 import prizedrowtelegrambot.telegram.Bot;
 
 @Component
@@ -22,6 +23,7 @@ public class CallbackQueryHandler {
     ButtonActionService buttonActionService;
     AdminMessageService adminMessageService;
     RandomDrawService randomDrawService;
+    ScheduleAppService scheduleAppService;
 
     public SendMessage processCallbackQuery(CallbackQuery buttonQuery, Bot bot) {
         String actionAnswer = "";
@@ -34,21 +36,31 @@ public class CallbackQueryHandler {
             switch (buttonActionDto.getAction()) {
                 case ACCEPT: {
                     actionAnswer = buttonActionService.acceptAction(
-                            (String)buttonActionDto.getValue(), user.getUserName(), bot);
+                            (String) buttonActionDto.getValue(), user.getUserName(), bot);
                     break;
                 }
                 case DECLINE: {
                     actionAnswer = buttonActionService.declineAction(
-                            (String)buttonActionDto.getValue(), user.getUserName(), bot);
+                            (String) buttonActionDto.getValue(), user.getUserName(), bot);
                     break;
                 }
                 case USER_PAYMENT_CONFIRMATION: {
                     actionAnswer = adminMessageService.sendCheckPaymentMessageToAllAdmins(
-                            (Integer)buttonActionDto.getValue(), user, chatId, bot);
+                            (Integer) buttonActionDto.getValue(), user, chatId, bot);
                     break;
                 }
                 case START_DRAW_CONFIRMATION: {
                     actionAnswer = randomDrawService.startDraw(chatId, bot);
+                    break;
+                }
+                case SEND_15_MIN_CONFIRMATION: {
+                    actionAnswer = adminMessageService.send15MinReminderToAllUsers(bot);
+                    break;
+                }
+                case SEND_TODAY_CONFIRMATION: {
+                    actionAnswer = adminMessageService.sendTodayReminderToAllUsers(bot);
+                    scheduleAppService.setStopTakingDonates();
+                    break;
                 }
             }
 

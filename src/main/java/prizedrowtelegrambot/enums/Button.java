@@ -15,7 +15,7 @@ public enum Button {
 
     GET_CONFIRMED_USERS_LIST("Get confirmed users list"),
 
-    START_DRAW_CONFIRMATION("----------------I'm sure. Start the draw!----------------"),
+    START_ADMIN_CONFIRMATION("----------------I'm sure! Start action!----------------"),
 
     SEND_TODAY_REMINDER("Send today reminder (and stop take donates)");
 

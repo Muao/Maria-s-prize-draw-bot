@@ -132,7 +132,7 @@ public enum BotMessage {
     ),
 
     SEND_TODAY_REMINDER_MESSAGE(
-            "Привіт! Розіграш выдбудеться сьогодні о %s.\n" +
+            "Привіт! Розіграш відбудеться сьогодні о %s.\n" +
                     "Чекаємо на тебе! Переходь за посиланням \n" +
                     "%s"
     ),
@@ -141,6 +141,10 @@ public enum BotMessage {
     END_DRAW_ADMIN_MESSAGE(
             "Поздравляю! Ты закрыл розыгрыш. \n" +
                     "Не забудь скинуть ссылку на стрим"
+    ),
+
+    SEND_REMINDER_CONFIRMATION_MESSAGE(
+            "You will send reminders for %d user/s. Confirm?"
     );
     private final String message;
 

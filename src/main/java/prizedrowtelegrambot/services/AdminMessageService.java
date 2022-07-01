@@ -33,7 +33,7 @@ public class AdminMessageService {
 
     public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
         String result;
-        if(donateService.isUserHaveUncheckedDonate(user.getUserName())) {
+        if (donateService.isUserHaveUncheckedDonate(user.getUserName())) {
             final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
             final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
             final String messageForAdmin = getMessageForAdmin(donate);
@@ -96,16 +96,33 @@ public class AdminMessageService {
         return sendMessage;
     }
 
-    public SendMessage send15MinReminderToAllUsers(Bot bot, String chatId) {
-        final String message = String.format(BotMessage.SEND_15_MIN_MESSAGE.getMessage(), drawLink);
-        final int sendMessageCount = sendReminderToAllUsers(bot, message);
-        return new SendMessage(chatId, String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount));
+    public SendMessage get15MinReminderConfirmation(String chatId) {
+        final List<String> chatIdsWithConfirmedDonates = donateService.getAllChatIdsWithConfirmedDonates();
+        final SendMessage sendMessage = new SendMessage(
+                chatId, String.format(BotMessage.SEND_REMINDER_CONFIRMATION_MESSAGE.getMessage(),
+                chatIdsWithConfirmedDonates.size()));
+        sendMessage.setReplyMarkup(inlineKeyboardMaker.get15MinReminderValidationMessage());
+        return sendMessage;
     }
 
-    public SendMessage sendTodayReminderToAllUsers(Bot bot, String chatId) {
+    public String send15MinReminderToAllUsers(Bot bot) {
+        final String message = String.format(BotMessage.SEND_15_MIN_MESSAGE.getMessage(), drawLink);
+        final int sendMessageCount = sendReminderToAllUsers(bot, message);
+        return String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount);
+    }
+
+    public SendMessage getTodayReminderConfirmation(String chatId) {
+        final List<String> chatIdsWithConfirmedDonates = donateService.getAllChatIdsWithConfirmedDonates();
+        final SendMessage sendMessage = new SendMessage(
+                chatId, String.format(BotMessage.SEND_REMINDER_CONFIRMATION_MESSAGE.getMessage(),
+                chatIdsWithConfirmedDonates.size()));
+        sendMessage.setReplyMarkup(inlineKeyboardMaker.getTodayReminderValidationMessage());
+        return sendMessage;
+    }
+    public String sendTodayReminderToAllUsers(Bot bot) {
         final String message = String.format(BotMessage.SEND_TODAY_REMINDER_MESSAGE.getMessage(), drawTime, drawLink);
         final int sendMessageCount = sendReminderToAllUsers(bot, message);
-        return new SendMessage(chatId, String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount));
+        return String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount);
     }
 
     private int sendReminderToAllUsers(Bot bot, String message) {

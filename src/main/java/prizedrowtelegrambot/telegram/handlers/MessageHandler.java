@@ -22,11 +22,9 @@ public class MessageHandler {
     final DonateService donateService;
     final InputDataService inputDataService;
     final AdminMessageService adminMessageService;
-
-    final ScheduleAppService scheduleAppService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
-    public SendMessage answerMessage(DonateDto donateDto, Bot bot) {
+    public SendMessage answerMessage(DonateDto donateDto) {
         SendMessage result;
         final String chatId = donateDto.getChatId();
         final String inputText = donateDto.getInputText();
@@ -37,7 +35,7 @@ public class MessageHandler {
         final Optional<Button> inputAsButton = convertToButton(inputText);
         if (inputAsButton.isPresent()) {
             final Button button = inputAsButton.get();
-            result = buttonAction(chatId, login, button, bot);
+            result = buttonAction(chatId, login, button);
         } else {
             result = noButtonAction(donateDto, chatId, inputText);
         }
@@ -54,7 +52,7 @@ public class MessageHandler {
         return result;
     }
 
-    private SendMessage buttonAction(String chatId, String login, Button button, Bot bot) {
+    private SendMessage buttonAction(String chatId, String login, Button button) {
         SendMessage result;
         switch (button) {
             case START: {
@@ -74,12 +72,11 @@ public class MessageHandler {
                 break;
             }
             case SEND_15_MIN_REMINDER: {
-                result = adminMessageService.send15MinReminderToAllUsers(bot, chatId);
-                        break;
+                result = adminMessageService.get15MinReminderConfirmation(chatId);
+                break;
             }
             case SEND_TODAY_REMINDER: {
-                result = adminMessageService.sendTodayReminderToAllUsers(bot, chatId);
-                scheduleAppService.setStopTakingDonates();
+                result = adminMessageService.getTodayReminderConfirmation(chatId);
                 break;
             }
             default: {

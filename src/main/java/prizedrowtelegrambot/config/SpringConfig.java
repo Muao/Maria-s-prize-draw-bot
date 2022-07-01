@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
+import prizedrowtelegrambot.services.ChatAdminService;
 import prizedrowtelegrambot.services.ScheduleAppService;
 import prizedrowtelegrambot.services.UserMessageService;
 import prizedrowtelegrambot.telegram.Bot;
@@ -30,8 +31,14 @@ public class SpringConfig {
                                 MessageHandler messageHandler,
                                 CallbackQueryHandler callbackQueryHandler,
                                 ScheduleAppService scheduleAppService,
-                                UserMessageService userMessageService) {
-        Bot bot = new Bot(setWebhook, messageHandler, callbackQueryHandler, scheduleAppService, userMessageService);
+                                UserMessageService userMessageService,
+                                ChatAdminService chatAdminService) {
+        Bot bot = new Bot(setWebhook,
+                messageHandler,
+                callbackQueryHandler,
+                scheduleAppService,
+                userMessageService,
+                chatAdminService);
 
         bot.setBotPath(telegramConfig.getWebhookPath());
         bot.setBotUsername(telegramConfig.getBotName());

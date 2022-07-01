@@ -26,7 +26,25 @@ public class InlineKeyboardMaker {
     public InlineKeyboardMarkup getStartDrawValidationMessage(){
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.START_DRAW_CONFIRMATION);
-        keyboard.add(getButton(Button.START_DRAW_CONFIRMATION.getName(), accept.toString()));
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup get15MinReminderValidationMessage(){
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.SEND_15_MIN_CONFIRMATION);
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup getTodayReminderValidationMessage(){
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.SEND_TODAY_CONFIRMATION);
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
