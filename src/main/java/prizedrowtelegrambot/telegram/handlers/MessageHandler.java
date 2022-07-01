@@ -9,10 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.enums.Button;
-import prizedrowtelegrambot.services.AdminMessageService;
-import prizedrowtelegrambot.services.DonateService;
-import prizedrowtelegrambot.services.InputDataService;
-import prizedrowtelegrambot.services.UserMessageService;
+import prizedrowtelegrambot.services.*;
 import prizedrowtelegrambot.telegram.Bot;
 
 import java.util.Optional;
@@ -25,6 +22,8 @@ public class MessageHandler {
     final DonateService donateService;
     final InputDataService inputDataService;
     final AdminMessageService adminMessageService;
+
+    final ScheduleAppService scheduleAppService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
     public SendMessage answerMessage(DonateDto donateDto, Bot bot) {
@@ -77,6 +76,11 @@ public class MessageHandler {
             case SEND_15_MIN_REMINDER: {
                 result = adminMessageService.send15MinReminderToAllUsers(bot, chatId);
                         break;
+            }
+            case SEND_TODAY_REMINDER: {
+                result = adminMessageService.sendTodayReminderToAllUsers(bot, chatId);
+                scheduleAppService.setStopTakingDonates();
+                break;
             }
             default: {
                 result = new SendMessage(chatId, BotMessage.NON_COMMAND_MESSAGE.getMessage());

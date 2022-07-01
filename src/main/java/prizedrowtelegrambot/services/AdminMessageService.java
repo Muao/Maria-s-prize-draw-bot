@@ -29,6 +29,7 @@ public class AdminMessageService {
     final DonateService donateService;
     final TicketService ticketService;
     @Value("${bot.draw-link}") String drawLink;
+    @Value("${bot.draw-time}") String drawTime;
 
     public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
         final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
@@ -95,7 +96,13 @@ public class AdminMessageService {
         return new SendMessage(chatId, String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount));
     }
 
-    public int sendReminderToAllUsers(Bot bot, String message) {
+    public SendMessage sendTodayReminderToAllUsers(Bot bot, String chatId) {
+        final String message = String.format(BotMessage.SEND_TODAY_REMINDER_MESSAGE.getMessage(), drawTime, drawLink);
+        final int sendMessageCount = sendReminderToAllUsers(bot, message);
+        return new SendMessage(chatId, String.format(BotMessage.ALREADY_SENT.getMessage(), sendMessageCount));
+    }
+
+    private int sendReminderToAllUsers(Bot bot, String message) {
         final List<String> chatIdsWithConfirmedDonates = donateService.getAllChatIdsWithConfirmedDonates();
         chatIdsWithConfirmedDonates.forEach(chatId -> {
             try {

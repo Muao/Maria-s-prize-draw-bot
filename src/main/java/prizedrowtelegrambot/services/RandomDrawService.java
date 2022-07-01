@@ -22,12 +22,14 @@ public class RandomDrawService {
     DonateService donationService;
     UserMessageService userMessageService;
     AdminMessageService adminMessageService;
+    ScheduleAppService scheduleAppService;
 
     public String startDraw(String chatId, Bot bot) {
         final List<Ticket> allTickets = ticketService.findAll();
         final List<String> tickets = ticketService.getAllTicketsAsStrings(allTickets);
         adminMessageService.sendStartDrawMessage(chatId, bot, tickets);
         processDraw(chatId, allTickets, bot);
+        scheduleAppService.setStopDraw();
         return BotMessage.END_DRAW_ADMIN_MESSAGE.getMessage();
     }
 

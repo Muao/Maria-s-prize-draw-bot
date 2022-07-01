@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import prizedrowtelegrambot.services.ScheduleAppService;
 import prizedrowtelegrambot.services.UserMessageService;
@@ -15,7 +14,7 @@ import prizedrowtelegrambot.telegram.handlers.MessageHandler;
 
 
 @Configuration
-@EnableScheduling
+//@EnableScheduling
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SpringConfig {

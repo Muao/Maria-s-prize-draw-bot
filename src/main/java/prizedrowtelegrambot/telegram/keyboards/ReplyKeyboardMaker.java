@@ -32,7 +32,8 @@ public class ReplyKeyboardMaker {
         final List<KeyboardRow> keyboard = new ArrayList<>();
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         row1.add(new KeyboardButton(Button.SEND_15_MIN_REMINDER.getName()));
-        row1.add(new KeyboardButton(Button.GET_CONFIRMED_USERS_LIST.getName()));
+        row1.add(new KeyboardButton(Button.SEND_TODAY_REMINDER.getName()));
+        row2.add(new KeyboardButton(Button.GET_CONFIRMED_USERS_LIST.getName()));
         row2.add(new KeyboardButton(Button.START_DRAW.getName()));
         keyboard.add(row1);
         keyboard.add(row2);

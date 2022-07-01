@@ -131,6 +131,11 @@ public enum BotMessage {
                     "%s"
     ),
 
+    SEND_TODAY_REMINDER_MESSAGE(
+            "Привіт! Розіграш выдбудеться сьогодні о %s.\n" +
+                    "Чекаємо на тебе! Переходь за посиланням \n" +
+                    "%s"
+    ),
     ALREADY_SENT("Message sent to %d user/s"),
 
     END_DRAW_ADMIN_MESSAGE(
