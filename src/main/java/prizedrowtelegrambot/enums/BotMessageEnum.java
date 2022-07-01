@@ -57,7 +57,7 @@ public enum BotMessageEnum {
 
     EXCEPTION_WHAT_THE_FUCK("Something went wrong"),
 
-    NOT_VALIDATED_DONATE_ALREADY_EXIST(
+    NOT_CHECKED_DONATE_ALREADY_EXIST(
             "Ти вже зробив запит на перевірку доната.\n" +
                     "Незабаром адмін його перевірить."
     ),

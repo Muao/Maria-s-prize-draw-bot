@@ -32,9 +32,9 @@ public class InlineKeyboardMaker {
         return inlineKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(String donateId) {
+    public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(long totalNeedsToPayment) {
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.USER_PAYMENT_CONFIRMATION);
+        final ButtonActionDto accept = new ButtonActionDto(totalNeedsToPayment, ButtonAction.USER_PAYMENT_CONFIRMATION);
         keyboard.add(getButton(ButtonNameEnum.USER_PAYMENT_CONFIRMATION.getButtonName(), accept.toString()));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(keyboard);

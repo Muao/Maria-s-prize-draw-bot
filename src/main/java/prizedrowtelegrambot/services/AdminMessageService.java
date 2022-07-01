@@ -6,17 +6,16 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import prizedrowtelegrambot.entities.ChatAdmin;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.repositories.ChatAdminRepository;
-import prizedrowtelegrambot.repositories.DonateRepository;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -26,13 +25,11 @@ import java.util.Set;
 public class AdminMessageService {
     ChatAdminRepository chatAdminRepository;
     InlineKeyboardMaker inlineKeyboardMaker;
-    DonateRepository donateRepository;
+    DonateService donateService;
     TicketService ticketService;
 
-    public String sendCheckPaymentMessageToAllAdmins(String donateId, Bot bot) {
-        final Optional<Donate> optionalDonate = donateRepository.findById(Long.parseLong(donateId));
-        if (optionalDonate.isPresent()) {
-            final Donate donate = optionalDonate.get();
+    public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
+        final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
             final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
             final String messageForAdmin = getMessageForAdmin(donate);
             admins.forEach(ad -> {
@@ -43,7 +40,6 @@ public class AdminMessageService {
                     log.error(e.getMessage(), e);
                 }
             });
-        }
         return BotMessageEnum.AFTER_PAYMENT_MESSAGE.getMessage();
     }
 

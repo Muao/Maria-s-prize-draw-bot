@@ -33,15 +33,18 @@ public class CallbackQueryHandler {
             buttonActionDto = new ObjectMapper().readValue(data, ButtonActionDto.class);
             switch (buttonActionDto.getAction()) {
                 case ACCEPT: {
-                    actionAnswer = buttonActionService.acceptAction(buttonActionDto.getDonateId(), user.getUserName(), bot);
+                    actionAnswer = buttonActionService.acceptAction(
+                            (String)buttonActionDto.getValue(), user.getUserName(), bot);
                     break;
                 }
                 case DECLINE: {
-                    actionAnswer = buttonActionService.declineAction(buttonActionDto.getDonateId(), user.getUserName(), bot);
+                    actionAnswer = buttonActionService.declineAction(
+                            (String)buttonActionDto.getValue(), user.getUserName(), bot);
                     break;
                 }
                 case USER_PAYMENT_CONFIRMATION: {
-                    actionAnswer = adminMessageService.sendCheckPaymentMessageToAllAdmins(buttonActionDto.getDonateId(), bot);
+                    actionAnswer = adminMessageService.sendCheckPaymentMessageToAllAdmins(
+                            (Integer)buttonActionDto.getValue(), user, chatId, bot);
                     break;
                 }
                 case START_DRAW_CONFIRMATION: {

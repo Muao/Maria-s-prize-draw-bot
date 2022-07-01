@@ -10,12 +10,12 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ButtonActionDto {
-    String donateId;
+    Object value;
     ButtonAction action;
 
     public Map<String, Object> toMap() {
         Map<String, Object> raw = new HashMap<>();
-        raw.put("donateId", this.donateId);
+        raw.put("value", this.value);
         raw.put("action", this.action);
         return raw;
     }

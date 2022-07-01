@@ -74,10 +74,10 @@ public class UserMessageService {
         }
     }
 
-    public SendMessage sendRequestToConfirmPaymentMessage(String chatId, Long donateId, long totalNeedsToPayment) {
+    public SendMessage sendRequestToConfirmPaymentMessage(String chatId, long totalNeedsToPayment) {
         final String message = String.format(BotMessageEnum.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment, cardNumber);
         final SendMessage sendMessage = new SendMessage(chatId, message);
-        sendMessage.setReplyMarkup(inlineKeyboardMaker.getUserPaymentConfirmationInlineButtons(donateId.toString()));
+        sendMessage.setReplyMarkup(inlineKeyboardMaker.getUserPaymentConfirmationInlineButtons(totalNeedsToPayment));
         return sendMessage;
     }
 

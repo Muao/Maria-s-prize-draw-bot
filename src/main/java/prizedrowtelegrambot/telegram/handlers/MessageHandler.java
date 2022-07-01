@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.dtos.DonateDto;
-import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.enums.BotMessageEnum;
 import prizedrowtelegrambot.enums.ButtonNameEnum;
 import prizedrowtelegrambot.services.AdminMessageService;
@@ -87,13 +86,14 @@ public class MessageHandler {
     }
 
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
+        SendMessage result;
         final int ticketsAmount = Integer.parseInt(donateDto.getInputText());
         final long totalNeedsToPayment = (long) ticketsAmount * Integer.parseInt(ticketPrice);
-        if (!donateService.isDonateFromUserWithSameAmountExist(donateDto.getLogin())) {
-            final Donate donate = donateService.saveEntity(donateDto, totalNeedsToPayment);
-            return userMessageService.sendRequestToConfirmPaymentMessage(chatId, donate.getId(), totalNeedsToPayment);
+        if (donateService.isUserHaveUncheckedDonate(donateDto.getLogin())) {
+            result = new SendMessage(chatId, BotMessageEnum.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage());
         } else {
-            return new SendMessage(chatId, BotMessageEnum.NOT_VALIDATED_DONATE_ALREADY_EXIST.getMessage());
+            result = userMessageService.sendRequestToConfirmPaymentMessage(chatId, totalNeedsToPayment);
         }
+        return result;
     }
 }
