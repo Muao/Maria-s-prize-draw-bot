@@ -2,7 +2,7 @@ package prizedrowtelegrambot.enums;
 
 import java.util.stream.Stream;
 
-public enum ButtonNameEnum {
+public enum Button {
     START("/start"),
     REGISTER("Зробити донат та зареєструватися у розіграші"),
     ACCEPT_PAYMENT("Approve Payment"),
@@ -17,17 +17,17 @@ public enum ButtonNameEnum {
 
     START_DRAW_CONFIRMATION("----------------I'm sure. Start the draw!----------------");
 
-    private final String buttonName;
+    private final String name;
 
-    ButtonNameEnum(String buttonName) {
-        this.buttonName = buttonName;
+    Button(String name) {
+        this.name = name;
     }
 
-    public String getButtonName() {
-        return buttonName;
+    public String getName() {
+        return name;
     }
 
-    public static Stream<ButtonNameEnum> stream(){
-        return Stream.of(ButtonNameEnum.values());
+    public static Stream<Button> stream(){
+        return Stream.of(Button.values());
     }
 }

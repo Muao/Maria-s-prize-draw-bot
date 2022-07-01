@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import prizedrowtelegrambot.entities.ChatAdmin;
 import prizedrowtelegrambot.entities.Donate;
-import prizedrowtelegrambot.enums.BotMessageEnum;
+import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.repositories.ChatAdminRepository;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
@@ -40,7 +40,7 @@ public class AdminMessageService {
                     log.error(e.getMessage(), e);
                 }
             });
-        return BotMessageEnum.AFTER_PAYMENT_MESSAGE.getMessage();
+        return BotMessage.AFTER_PAYMENT_MESSAGE.getMessage();
     }
 
     private SendMessage createPaymentValidationMessage(String chatId, String messageForAdmin, String donateId) {
@@ -55,7 +55,7 @@ public class AdminMessageService {
     }
 
     public void sendWinningMessage(int iteration, String chatId, String login, Long ticketId, Bot bot) {
-        final String message = String.format(BotMessageEnum.WINNING_ADMIN_MESSAGE.getMessage(),
+        final String message = String.format(BotMessage.WINNING_ADMIN_MESSAGE.getMessage(),
                 iteration, login, ticketId);
         try {
             bot.execute(new SendMessage(chatId, message));
@@ -66,7 +66,7 @@ public class AdminMessageService {
 
     public void sendStartDrawMessage(String chatId, Bot bot, List<String> tickets) {
         final String allTicketIds = String.join("\n", tickets);
-        final String message = String.format(BotMessageEnum.START_DRAW_MESSAGE.getMessage(), allTicketIds);
+        final String message = String.format(BotMessage.START_DRAW_MESSAGE.getMessage(), allTicketIds);
         try {
             bot.execute(new SendMessage(chatId, message));
         } catch (TelegramApiException e) {
@@ -82,7 +82,7 @@ public class AdminMessageService {
 
     public SendMessage startDrawConfirmation(String chatId) {
         final SendMessage sendMessage = new SendMessage(
-                chatId, BotMessageEnum.START_DRAW_CONFIRMATION_MESSAGE.getMessage());
+                chatId, BotMessage.START_DRAW_CONFIRMATION_MESSAGE.getMessage());
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getStartDrawValidationMessage());
         return sendMessage;
     }

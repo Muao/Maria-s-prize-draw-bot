@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
 import prizedrowtelegrambot.dtos.DonateDto;
-import prizedrowtelegrambot.enums.BotMessageEnum;
+import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.services.ScheduleAppService;
 import prizedrowtelegrambot.services.UserMessageService;
 import prizedrowtelegrambot.telegram.handlers.CallbackQueryHandler;
@@ -50,7 +50,7 @@ public class Bot extends SpringWebhookBot {
             return handleUpdate(update);
         } catch (Exception e) {
             return new SendMessage(update.getMessage().getChatId().toString(),
-                    BotMessageEnum.EXCEPTION_WHAT_THE_FUCK.getMessage());
+                    BotMessage.EXCEPTION_WHAT_THE_FUCK.getMessage());
         }
     }
 

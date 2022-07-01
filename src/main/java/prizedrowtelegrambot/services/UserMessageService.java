@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import prizedrowtelegrambot.dtos.DonateDto;
-import prizedrowtelegrambot.enums.BotMessageEnum;
+import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.telegram.Bot;
 import prizedrowtelegrambot.telegram.keyboards.InlineKeyboardMaker;
 import prizedrowtelegrambot.telegram.keyboards.ReplyKeyboardMaker;
@@ -37,12 +37,12 @@ public class UserMessageService {
             replyKeyboardMarkup = replyKeyboardMaker.getAdminKeyboardMarkup();
             final int countOfApprovedDonations = donateService.getCountOfApprovedDonations();
             final String adminMessage = String.format(
-                    BotMessageEnum.INTRO_ADMIN_MESSAGE.getMessage(),
+                    BotMessage.INTRO_ADMIN_MESSAGE.getMessage(),
                     login, countOfApprovedDonations);
             sendMessage = new SendMessage(chatId, adminMessage);
         } else {
             replyKeyboardMarkup = replyKeyboardMaker.getUserMenuKeyboard();
-            sendMessage = new SendMessage(chatId, BotMessageEnum.INTRO_MESSAGE.getMessage());
+            sendMessage = new SendMessage(chatId, BotMessage.INTRO_MESSAGE.getMessage());
         }
         sendMessage.enableMarkdown(true);
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -51,7 +51,7 @@ public class UserMessageService {
     }
 
     public SendMessage getTicketsAmountMessage(String chatId) {
-        return new SendMessage(chatId, BotMessageEnum.TICKETS_AMOUNT_MESSAGE.getMessage());
+        return new SendMessage(chatId, BotMessage.TICKETS_AMOUNT_MESSAGE.getMessage());
     }
 
     public void sendSuccessConfirmationMessage(Bot bot, long totalNeedsToPay, Set<String> ticketsIds, String chatId) {
@@ -75,36 +75,36 @@ public class UserMessageService {
     }
 
     public SendMessage sendRequestToConfirmPaymentMessage(String chatId, long totalNeedsToPayment) {
-        final String message = String.format(BotMessageEnum.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment, cardNumber);
+        final String message = String.format(BotMessage.PAYMENT_MESSAGE.getMessage(), totalNeedsToPayment, cardNumber);
         final SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.setReplyMarkup(inlineKeyboardMaker.getUserPaymentConfirmationInlineButtons(totalNeedsToPayment));
         return sendMessage;
     }
 
     private String getDeclinePaymentMessage(long totalNeedsToPay) {
-        return String.format(BotMessageEnum.DECLINE_PAYMENT_MESSAGE.getMessage(),
+        return String.format(BotMessage.DECLINE_PAYMENT_MESSAGE.getMessage(),
                 totalNeedsToPay, adminLogin);
     }
 
     private String getSuccessConfirmationMessage(long totalNeedsToPay, Set<String> ticketsIds) {
-        return String.format(BotMessageEnum.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
+        return String.format(BotMessage.SUCCESS_CONFIRMATION_MESSAGE.getMessage(),
                 totalNeedsToPay, ticketsIds.size(), String.join("\n", ticketsIds), drawData);
     }
 
     public SendMessage getStopTakingDonatesMessage(DonateDto donateDto) {
         return new SendMessage(donateDto.getChatId(), String.format(
-                BotMessageEnum.STOP_TAKING_DONATES_MESSAGE.getMessage(),
+                BotMessage.STOP_TAKING_DONATES_MESSAGE.getMessage(),
                 donateDto.getLogin(), cardNumber));
     }
 
     public SendMessage getStopDrawMessage(DonateDto donateDto) {
         return new SendMessage(donateDto.getChatId(), String.format(
-                BotMessageEnum.STOP_DRAW_MESSAGE.getMessage(),
+                BotMessage.STOP_DRAW_MESSAGE.getMessage(),
                 donateDto.getLogin(), donateService.getCheckedTotalNeedsToPay(), cardNumber));
     }
 
     public void sendWinningMessage(String chatId, String login, Long ticketId, Bot bot) {
-        final String message = String.format(BotMessageEnum.WINNING_MESSAGE.getMessage(), login, ticketId);
+        final String message = String.format(BotMessage.WINNING_MESSAGE.getMessage(), login, ticketId);
         try {
             bot.execute(new SendMessage(chatId, message));
         } catch (TelegramApiException e) {

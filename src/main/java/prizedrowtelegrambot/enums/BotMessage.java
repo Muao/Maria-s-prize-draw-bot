@@ -1,6 +1,6 @@
 package prizedrowtelegrambot.enums;
 
-public enum BotMessageEnum {
+public enum BotMessage {
 
     INTRO_MESSAGE(
             "Вітаємо тебе, друже, на розіграші баски від Марії Кулієвої!\n" +
@@ -127,7 +127,7 @@ public enum BotMessageEnum {
 
     private final String message;
 
-    BotMessageEnum(String message) {
+    BotMessage(String message) {
         this.message = message;
     }
 

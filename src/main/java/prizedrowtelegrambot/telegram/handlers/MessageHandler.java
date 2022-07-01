@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.dtos.DonateDto;
-import prizedrowtelegrambot.enums.BotMessageEnum;
-import prizedrowtelegrambot.enums.ButtonNameEnum;
+import prizedrowtelegrambot.enums.BotMessage;
+import prizedrowtelegrambot.enums.Button;
 import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.services.InputDataService;
@@ -34,10 +34,10 @@ public class MessageHandler {
         if (inputText == null) {
             throw new IllegalStateException();
         }
-        final Optional<ButtonNameEnum> inputAsButton = convertToButton(inputText);
+        final Optional<Button> inputAsButton = convertToButton(inputText);
         if (inputAsButton.isPresent()) {
-            final ButtonNameEnum buttonName = inputAsButton.get();
-            result = buttonAction(chatId, login, buttonName);
+            final Button button = inputAsButton.get();
+            result = buttonAction(chatId, login, button);
         } else {
             result = noButtonAction(donateDto, chatId, inputText);
         }
@@ -49,14 +49,14 @@ public class MessageHandler {
         if (inputDataService.isPositiveDigit(inputText)) {
             result = paymentProcessing(donateDto, chatId);
         } else {
-            result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+            result = new SendMessage(chatId, BotMessage.NON_COMMAND_MESSAGE.getMessage());
         }
         return result;
     }
 
-    private SendMessage buttonAction(String chatId, String login, ButtonNameEnum buttonName) {
+    private SendMessage buttonAction(String chatId, String login, Button button) {
         SendMessage result;
-        switch (buttonName) {
+        switch (button) {
             case START: {
                 result = userMessageService.getStartMessage(chatId, login);
                 break;
@@ -74,15 +74,15 @@ public class MessageHandler {
                 break;
             }
             default: {
-                result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+                result = new SendMessage(chatId, BotMessage.NON_COMMAND_MESSAGE.getMessage());
             }
         }
         return result;
     }
 
-    private Optional<ButtonNameEnum> convertToButton(String inputText) {
-        return ButtonNameEnum.stream()
-                .filter(button -> button.getButtonName().equals(inputText)).findFirst();
+    private Optional<Button> convertToButton(String inputText) {
+        return Button.stream()
+                .filter(button -> button.getName().equals(inputText)).findFirst();
     }
 
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
@@ -90,7 +90,7 @@ public class MessageHandler {
         final int ticketsAmount = Integer.parseInt(donateDto.getInputText());
         final long totalNeedsToPayment = (long) ticketsAmount * Integer.parseInt(ticketPrice);
         if (donateService.isUserHaveUncheckedDonate(donateDto.getLogin())) {
-            result = new SendMessage(chatId, BotMessageEnum.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage());
+            result = new SendMessage(chatId, BotMessage.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage());
         } else {
             result = userMessageService.sendRequestToConfirmPaymentMessage(chatId, totalNeedsToPayment);
         }
