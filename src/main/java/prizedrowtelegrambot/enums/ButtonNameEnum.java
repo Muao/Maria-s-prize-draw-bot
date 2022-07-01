@@ -1,6 +1,9 @@
 package prizedrowtelegrambot.enums;
 
+import java.util.stream.Stream;
+
 public enum ButtonNameEnum {
+    START("/start"),
     REGISTER("Зробити донат та зареєструватися у розіграші"),
     ACCEPT_PAYMENT("Approve Payment"),
     DECLINE_PAYMENT("Decline Payment"),
@@ -10,7 +13,7 @@ public enum ButtonNameEnum {
 
     START_DRAW("Start draw"),
 
-    GET_CONFIRMED_USERS_LIST("Get confirmed users"),
+    GET_CONFIRMED_USERS_LIST("Get confirmed users list"),
 
     START_DRAW_CONFIRMATION("----------------I'm sure. Start the draw!----------------");
 
@@ -22,5 +25,9 @@ public enum ButtonNameEnum {
 
     public String getButtonName() {
         return buttonName;
+    }
+
+    public static Stream<ButtonNameEnum> stream(){
+        return Stream.of(ButtonNameEnum.values());
     }
 }

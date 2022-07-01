@@ -9,10 +9,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.entities.Donate;
 import prizedrowtelegrambot.enums.BotMessageEnum;
+import prizedrowtelegrambot.enums.ButtonNameEnum;
 import prizedrowtelegrambot.services.AdminMessageService;
 import prizedrowtelegrambot.services.DonateService;
 import prizedrowtelegrambot.services.InputDataService;
 import prizedrowtelegrambot.services.UserMessageService;
+
+import java.util.Optional;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -32,33 +35,55 @@ public class MessageHandler {
         if (inputText == null) {
             throw new IllegalStateException();
         }
-        switch (inputText) {
-            case "/start": {
+        final Optional<ButtonNameEnum> inputAsButton = convertToButton(inputText);
+        if (inputAsButton.isPresent()) {
+            final ButtonNameEnum buttonName = inputAsButton.get();
+            result = buttonAction(chatId, login, buttonName);
+        } else {
+            result = noButtonAction(donateDto, chatId, inputText);
+        }
+        return result;
+    }
+
+    private SendMessage noButtonAction(DonateDto donateDto, String chatId, String inputText) {
+        SendMessage result;
+        if (inputDataService.isPositiveDigit(inputText)) {
+            result = paymentProcessing(donateDto, chatId);
+        } else {
+            result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
+        }
+        return result;
+    }
+
+    private SendMessage buttonAction(String chatId, String login, ButtonNameEnum buttonName) {
+        SendMessage result;
+        switch (buttonName) {
+            case START: {
                 result = userMessageService.getStartMessage(chatId, login);
                 break;
             }
-            case "Зробити донат та зареєструватися у розіграші": {
+            case REGISTER: {
                 result = userMessageService.getTicketsAmountMessage(chatId);
                 break;
             }
-
-            case "Start draw": {
+            case START_DRAW: {
                 result = adminMessageService.startDrawConfirmation(chatId);
                 break;
             }
-            case "Get confirmed users": {
+            case GET_CONFIRMED_USERS_LIST: {
                 result = adminMessageService.getConfirmedUserList(chatId);
                 break;
             }
             default: {
-                if (inputDataService.isPositiveDigit(inputText)) {
-                    result = paymentProcessing(donateDto, chatId);
-                } else {
-                    result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
-                }
+                result = new SendMessage(chatId, BotMessageEnum.NON_COMMAND_MESSAGE.getMessage());
             }
         }
         return result;
+    }
+
+    private Optional<ButtonNameEnum> convertToButton(String inputText) {
+        return ButtonNameEnum.stream()
+                .filter(button -> button.getButtonName().equals(inputText)).findFirst();
     }
 
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
