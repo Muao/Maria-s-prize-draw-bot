@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface DonateRepository extends CrudRepository<Donate, Long> {
 
-    Set<Donate> getEntityByTotalNeedsToPayAndLogin(long totalNeedsToPay, String login);
+    Set<Donate> getEntityByLoginAndCheckedIsFalseAndCheckerLoginIsNull(String login);
 
     @Query("SELECT SUM(d.totalNeedsToPay) FROM Donate d WHERE d.checked is true")
     long getTotalNeedsToPayConfirmedSum();

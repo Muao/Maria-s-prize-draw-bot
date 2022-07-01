@@ -57,7 +57,10 @@ public enum BotMessageEnum {
 
     EXCEPTION_WHAT_THE_FUCK("Something went wrong"),
 
-    SAME_TICKETS_AMOUNT_ALREADY_EXIST("Ви вже купували таку ж кількість квитків"),
+    NOT_VALIDATED_DONATE_ALREADY_EXIST(
+            "Ти вже зробив запит на перевірку доната.\n" +
+                    "Незабаром адмін його перевірить."
+    ),
 
     CAN_NOT_GET_DONATE_ENTITY("Can't get Donate entity with id %s"),
 

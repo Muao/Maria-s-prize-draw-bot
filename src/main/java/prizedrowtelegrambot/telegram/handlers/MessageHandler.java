@@ -89,11 +89,11 @@ public class MessageHandler {
     private SendMessage paymentProcessing(DonateDto donateDto, String chatId) {
         final int ticketsAmount = Integer.parseInt(donateDto.getInputText());
         final long totalNeedsToPayment = (long) ticketsAmount * Integer.parseInt(ticketPrice);
-        if (!donateService.isDonateFromUserWithSameAmountExist(totalNeedsToPayment, donateDto.getLogin())) {
+        if (!donateService.isDonateFromUserWithSameAmountExist(donateDto.getLogin())) {
             final Donate donate = donateService.saveEntity(donateDto, totalNeedsToPayment);
             return userMessageService.sendRequestToConfirmPaymentMessage(chatId, donate.getId(), totalNeedsToPayment);
         } else {
-            return new SendMessage(chatId, BotMessageEnum.SAME_TICKETS_AMOUNT_ALREADY_EXIST.getMessage());
+            return new SendMessage(chatId, BotMessageEnum.NOT_VALIDATED_DONATE_ALREADY_EXIST.getMessage());
         }
     }
 }

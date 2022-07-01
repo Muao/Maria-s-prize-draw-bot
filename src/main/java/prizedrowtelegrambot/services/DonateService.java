@@ -27,9 +27,9 @@ public class DonateService {
         return donateRepository.save(donate);
     }
 
-    public boolean isDonateFromUserWithSameAmountExist(long totalNeedsToPayment, String login) {
+    public boolean isDonateFromUserWithSameAmountExist(String login) {
         final Set<Donate> entityByAmountAndLogin =
-                donateRepository.getEntityByTotalNeedsToPayAndLogin(totalNeedsToPayment, login);
+                donateRepository.getEntityByLoginAndCheckedIsFalseAndCheckerLoginIsNull(login);
         return !entityByAmountAndLogin.isEmpty();
     }
 
