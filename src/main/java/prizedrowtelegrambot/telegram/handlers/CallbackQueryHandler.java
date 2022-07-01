@@ -63,9 +63,10 @@ public class CallbackQueryHandler {
                     break;
                 }
             }
-
         } catch (JsonProcessingException e) {
             actionAnswer = "Can't parse button action object " + e.getMessage();
+        } catch (InterruptedException e) {
+            actionAnswer = "InterruptedException happens " + e.getMessage();
         }
         final SendMessage sendMessage = new SendMessage(chatId, actionAnswer);
         sendMessage.enableHtml(true);
