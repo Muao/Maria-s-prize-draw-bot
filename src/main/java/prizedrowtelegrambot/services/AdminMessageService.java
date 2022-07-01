@@ -32,18 +32,24 @@ public class AdminMessageService {
     @Value("${bot.draw-time}") String drawTime;
 
     public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
-        final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
-        final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
-        final String messageForAdmin = getMessageForAdmin(donate);
-        admins.forEach(ad -> {
-            try {
-                bot.execute(createPaymentValidationMessage(
-                        ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
-            } catch (TelegramApiException e) {
-                log.error(e.getMessage(), e);
-            }
-        });
-        return BotMessage.AFTER_PAYMENT_MESSAGE.getMessage();
+        String result;
+        if(donateService.isUserHaveUncheckedDonate(user.getUserName())) {
+            final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
+            final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
+            final String messageForAdmin = getMessageForAdmin(donate);
+            admins.forEach(ad -> {
+                try {
+                    bot.execute(createPaymentValidationMessage(
+                            ad.getChatId(), messageForAdmin, String.valueOf(donate.getId())));
+                } catch (TelegramApiException e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
+            result = BotMessage.AFTER_PAYMENT_MESSAGE.getMessage();
+        } else {
+            result = BotMessage.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage();
+        }
+        return result;
     }
 
     private SendMessage createPaymentValidationMessage(String chatId, String messageForAdmin, String donateId) {
