@@ -17,4 +17,8 @@ public class ScheduleAppService {
     public void setStopDraw() {
         scheduledStopAction = ScheduledStopAction.STOP_DRAW;
     }
+
+    public void startNewDraw() {
+        scheduledStopAction = ScheduledStopAction.NONE;
+    }
 }

@@ -10,7 +10,6 @@ import prizedrowtelegrambot.dtos.DonateDto;
 import prizedrowtelegrambot.enums.BotMessage;
 import prizedrowtelegrambot.enums.Button;
 import prizedrowtelegrambot.services.*;
-import prizedrowtelegrambot.telegram.Bot;
 
 import java.util.Optional;
 
@@ -22,6 +21,7 @@ public class MessageHandler {
     final DonateService donateService;
     final InputDataService inputDataService;
     final AdminMessageService adminMessageService;
+    final ScheduleAppService scheduleAppService;
     @Value("${bot.ticket-price}") String ticketPrice;
 
     public SendMessage answerMessage(DonateDto donateDto) {
@@ -55,6 +55,13 @@ public class MessageHandler {
     private SendMessage buttonAction(String chatId, String login, Button button) {
         SendMessage result;
         switch (button) {
+            case RESTART: {
+                result = adminMessageService.reStartDraw(chatId);
+                scheduleAppService.startNewDraw();
+                //clean db action
+                break;
+            }
+
             case START: {
                 result = userMessageService.getStartMessage(chatId, login);
                 break;

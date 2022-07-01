@@ -136,4 +136,8 @@ public class AdminMessageService {
         });
         return chatIdsWithConfirmedDonates.size();
     }
+
+    public SendMessage reStartDraw(String chatId) {
+        return new SendMessage(chatId, BotMessage.RESTART_DRAW.getMessage());
+    }
 }

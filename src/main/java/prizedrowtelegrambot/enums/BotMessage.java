@@ -145,7 +145,10 @@ public enum BotMessage {
 
     SEND_REMINDER_CONFIRMATION_MESSAGE(
             "You will send reminders for %d user/s. Confirm?"
-    );
+    ),
+
+    RESTART_DRAW("Draw was restarted");
+
     private final String message;
 
     BotMessage(String message) {

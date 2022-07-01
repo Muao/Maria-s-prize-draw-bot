@@ -3,6 +3,7 @@ package prizedrowtelegrambot.enums;
 import java.util.stream.Stream;
 
 public enum Button {
+    RESTART("/restart"),
     START("/start"),
     REGISTER("Зробити донат та зареєструватися у розіграші"),
     ACCEPT_PAYMENT("Approve Payment"),
