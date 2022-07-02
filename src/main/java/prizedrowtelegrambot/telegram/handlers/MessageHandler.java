@@ -102,10 +102,10 @@ public class MessageHandler {
         SendMessage result;
         final int ticketsAmount = Integer.parseInt(donateDto.getInputText());
         final long totalNeedsToPayment = (long) ticketsAmount * Integer.parseInt(ticketPrice);
-        if (donateService.isUserHaveUncheckedDonate(donateDto.getLogin())) {
-            result = new SendMessage(chatId, BotMessage.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage());
-        } else {
+        if (!donateService.isUserHaveUncheckedDonate(donateDto.getLogin())) {
             result = userMessageService.sendRequestToConfirmPaymentMessage(chatId, totalNeedsToPayment);
+        } else {
+            result = new SendMessage(chatId, BotMessage.NOT_CHECKED_DONATE_ALREADY_EXIST.getMessage());
         }
         return result;
     }

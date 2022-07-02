@@ -33,7 +33,7 @@ public class AdminMessageService {
 
     public String sendCheckPaymentMessageToAllAdmins(long totalNeedsToPayment, User user, String chatId, Bot bot) {
         String result;
-        if (donateService.isUserHaveUncheckedDonate(user.getUserName())) {
+        if (!donateService.isUserHaveUncheckedDonate(user.getUserName())) {
             final Donate donate = donateService.saveEntity(totalNeedsToPayment, user, chatId);
             final Iterable<ChatAdmin> admins = chatAdminRepository.findAll();
             final String messageForAdmin = getMessageForAdmin(donate);

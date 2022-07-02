@@ -33,7 +33,7 @@ public class DonateService {
 
     public boolean isUserHaveUncheckedDonate(String login) {
         final Set<Donate> entityByAmountAndLogin =
-                donateRepository.getEntityByLoginAndCheckedIsFalseAndCheckerLoginIsNull(login);
+                donateRepository.getEntityByLoginAndCheckerLoginIsNull(login);
         return !entityByAmountAndLogin.isEmpty();
     }
 
