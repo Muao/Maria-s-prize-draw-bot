@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import prizedrowtelegrambot.enums.ButtonAction;
-import prizedrowtelegrambot.enums.ButtonNameEnum;
+import prizedrowtelegrambot.enums.Button;
 import prizedrowtelegrambot.dtos.ButtonActionDto;
 
 import java.util.ArrayList;
@@ -16,17 +16,44 @@ public class InlineKeyboardMaker {
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.ACCEPT);
         final ButtonActionDto decline = new ButtonActionDto(donateId, ButtonAction.DECLINE);
-        keyboard.add(getButton(ButtonNameEnum.ACCEPT_PAYMENT.getButtonName(), accept.toString()));
-        keyboard.add(getButton(ButtonNameEnum.DECLINE_PAYMENT.getButtonName(), decline.toString()));
+        keyboard.add(getButton(Button.ACCEPT_PAYMENT.getName(), accept.toString()));
+        keyboard.add(getButton(Button.DECLINE_PAYMENT.getName(), decline.toString()));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(String donateId) {
+    public InlineKeyboardMarkup getStartDrawValidationMessage(){
         final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        final ButtonActionDto accept = new ButtonActionDto(donateId, ButtonAction.USER_PAYMENT_CONFIRMATION);
-        keyboard.add(getButton(ButtonNameEnum.USER_PAYMENT_CONFIRMATION.getButtonName(), accept.toString()));
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.START_DRAW_CONFIRMATION);
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup get15MinReminderValidationMessage(){
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.SEND_15_MIN_CONFIRMATION);
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup getTodayReminderValidationMessage(){
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(null, ButtonAction.SEND_TODAY_CONFIRMATION);
+        keyboard.add(getButton(Button.START_ADMIN_CONFIRMATION.getName(), accept.toString()));
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup getUserPaymentConfirmationInlineButtons(long totalNeedsToPayment) {
+        final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        final ButtonActionDto accept = new ButtonActionDto(totalNeedsToPayment, ButtonAction.USER_PAYMENT_CONFIRMATION);
+        keyboard.add(getButton(Button.USER_PAYMENT_CONFIRMATION.getName(), accept.toString()));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;

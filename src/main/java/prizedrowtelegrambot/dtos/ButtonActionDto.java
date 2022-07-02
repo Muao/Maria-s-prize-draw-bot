@@ -1,16 +1,21 @@
 package prizedrowtelegrambot.dtos;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
+import lombok.*;
 import prizedrowtelegrambot.enums.ButtonAction;
 
 import java.util.HashMap;
 import java.util.Map;
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ButtonActionDto {
+    Object value;
+    ButtonAction action;
 
-public record ButtonActionDto(String donateId, ButtonAction action) {
     public Map<String, Object> toMap() {
         Map<String, Object> raw = new HashMap<>();
-        raw.put("donateId", this.donateId);
+        raw.put("value", this.value);
         raw.put("action", this.action);
         return raw;
     }

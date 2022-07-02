@@ -4,4 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import prizedrowtelegrambot.entities.ChatAdmin;
 
 public interface ChatAdminRepository extends CrudRepository<ChatAdmin, Long> {
+    ChatAdmin findByLogin(String login);
 }
