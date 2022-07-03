@@ -12,7 +12,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>prize-drow-telegram-bot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>prize-drow-telegram-bot</name>
     <description>prize-drow-telegram-bot</description>
     <properties>

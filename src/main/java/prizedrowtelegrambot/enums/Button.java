@@ -8,7 +8,7 @@ public enum Button {
     REGISTER("Зробити донат та зареєструватися у розіграші"),
     ACCEPT_PAYMENT("Approve Payment"),
     DECLINE_PAYMENT("Decline Payment"),
-    USER_PAYMENT_CONFIRMATION("Я підтверджую що зробив донат! Піревірте будьласка!"),
+    USER_PAYMENT_CONFIRMATION("Я підтверджую, що зробив донат! Перевірте будь-ласка."),
 
     SEND_15_MIN_REMINDER("Send 15 min reminder"),
 
